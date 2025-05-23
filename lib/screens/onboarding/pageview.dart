@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:hackathon_project/components/onboarding_stack_widgets.dart';
 import 'package:hackathon_project/models/page_class.dart';
 import 'package:hackathon_project/screens/onboarding/page_1.dart';
-import 'package:hackathon_project/screens/onboarding/page_2.dart';
-import 'package:hackathon_project/screens/onboarding/page_3.dart';
 
 class Pageviews extends StatefulWidget {
   const Pageviews({super.key});

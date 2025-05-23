@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hackathon_project/components/Apptheme.dart';
+import 'package:hackathon_project/components/apptheme.dart';
 
 class Onboardbuttons extends StatelessWidget {
   const Onboardbuttons(

@@ -1,9 +1,7 @@
 // ignore_for_file: avoid_print
-
 import 'package:flutter/material.dart';
 import 'package:hackathon_project/components/apptheme.dart';
-
-import '../components/apptheme.dart';
+import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 class Register extends StatefulWidget {
   const Register({super.key, required this.toggle1});
@@ -97,202 +95,210 @@ class _RegisterState extends State<Register> {
 //     }
 
     Size size = MediaQuery.of(context).size;
-    //double width = size.width;
+    double width = size.width;
     double height = size.height;
+    print(height);
+    print(width);
+    bool create = true;
+    bool confirm = true;
 
     return Scaffold(
-        backgroundColor: Apptheme.primary,
+        backgroundColor: Colors.white,
         body: Padding(
-          padding: EdgeInsets.only(top: height / 6),
-          child: Container(
-            height: double.infinity,
-            decoration: const BoxDecoration(
-                color: Apptheme.primarycolor,
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20))),
-            child: Padding(
-              padding: const EdgeInsets.only(top: 30, left: 10, right: 10),
-              child: SingleChildScrollView(
-                child: Column(
+          padding: EdgeInsets.only(
+              top: height * 0.078, left: width * 0.058, right: 10, bottom: 40),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Hello ',
+                  style: TextStyle(
+                    color: const Color(0xFF03050B),
+                    fontSize: height * 0.046,
+                    fontFamily: 'Fractul',
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                Text(
+                  'there!',
+                  style: TextStyle(
+                    color: Apptheme.primary,
+                    fontSize: height * 0.046,
+                    fontFamily: 'Fractul',
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                SizedBox(
+                  height: height * 0.016,
+                ),
+                const Text(
+                  'Create an account to start your trading journey, with the best tools we have to offer',
+                  style: TextStyle(
+                    color: Color(0xFF94959D),
+                    fontSize: 16,
+                    fontFamily: 'Gilroy',
+                    fontWeight: FontWeight.w500,
+                    height: 1.50,
+                  ),
+                ),
+                SizedBox(height: height * 0.046),
+                Container(
+                  padding: const EdgeInsets.all(7),
+                  decoration: ShapeDecoration(
+                    color: Apptheme.mygrey,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(32),
+                    ),
+                  ),
+                  child: TextField(
+                    textAlignVertical: TextAlignVertical.center,
+                    cursorColor: Colors.greenAccent,
+                    controller: _emailcontroller,
+                    style: const TextStyle(color: Colors.black, fontSize: 15),
+                    decoration: const InputDecoration(
+                        contentPadding: EdgeInsets.only(left: 10),
+                        border: InputBorder.none,
+                        prefixIcon: Icon(
+                          Iconsax.sms_copy,
+                          color: Apptheme.lightgrey,
+                        ),
+                        hintText: 'Enter your mail',
+                        hintStyle: TextStyle(
+                          color: Apptheme.lightgrey,
+                          fontSize: 16,
+                          fontFamily: 'Gilroy',
+                          fontWeight: FontWeight.w500,
+                          height: 1.50,
+                        )),
+                  ),
+                ),
+                SizedBox(height: height * 0.023),
+                Container(
+                  padding: const EdgeInsets.all(7),
+                  decoration: ShapeDecoration(
+                    color: Apptheme.mygrey,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(32),
+                    ),
+                  ),
+                  child: Center(
+                    child: TextField(
+                      textAlignVertical: TextAlignVertical.center,
+                      cursorColor: Colors.greenAccent,
+                      controller: _firstnamecontroller,
+                      style: const TextStyle(color: Colors.black, fontSize: 15),
+                      decoration: const InputDecoration(
+                          contentPadding: EdgeInsets.only(left: 10),
+                          border: InputBorder.none,
+                          alignLabelWithHint: true,
+                          suffixIcon: Icon(
+                            Iconsax.eye_slash_copy,
+                            color: Apptheme.lightgrey,
+                          ),
+                          prefixIcon: Icon(
+                            Iconsax.lock_1_copy,
+                            color: Apptheme.lightgrey,
+                          ),
+                          hintText: 'Create password',
+                          hintStyle: TextStyle(
+                            color: Apptheme.lightgrey,
+                            fontSize: 16,
+                            fontFamily: 'Gilroy',
+                            fontWeight: FontWeight.w500,
+                            height: 1.50,
+                          )),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: height * 0.023,
+                ),
+                Container(
+                  padding: const EdgeInsets.all(7),
+                  decoration: ShapeDecoration(
+                    color: Apptheme.mygrey,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(32),
+                    ),
+                  ),
+                  child: TextField(
+                    textAlignVertical: TextAlignVertical.center,
+                    cursorColor: Colors.greenAccent,
+                    controller: _lastnamecontroller,
+                    style: const TextStyle(color: Colors.black, fontSize: 15),
+                    decoration: const InputDecoration(
+                        contentPadding: EdgeInsets.only(left: 10),
+                        // prefixIcon: icon,
+                        border: InputBorder.none,
+                        suffixIcon: Icon(
+                          Iconsax.eye_slash_copy,
+                          color: Apptheme.lightgrey,
+                        ),
+                        prefixIcon: Icon(
+                          Iconsax.lock_1_copy,
+                          color: Apptheme.lightgrey,
+                        ),
+                        hintText: 'Re-type your password',
+                        hintStyle: TextStyle(
+                          color: Apptheme.lightgrey,
+                          fontSize: 16,
+                          fontFamily: 'Gilroy',
+                          fontWeight: FontWeight.w500,
+                          height: 1.50,
+                        )),
+                  ),
+                ),
+                SizedBox(
+                  height: height * 0.023,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 100),
+                  child: GestureDetector(
+                    onTap: () {},
+                    child: Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: const Color.fromARGB(255, 50, 47, 80),
+                      ),
+                      child: Center(
+                        child: Text(
+                          'SIGNUP',
+                          style: TextStyle(
+                            color: Apptheme.primary,
+                            fontSize: height / 35,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: height * 0.02,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text(
-                      'Register',
+                      'Already a member?',
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    SizedBox(
-                      height: height * 0.02,
+                    const SizedBox(
+                      width: 20,
                     ),
-                    Container(
-                      padding: const EdgeInsets.all(7),
-                      decoration: const BoxDecoration(
-                        color: Apptheme.primary,
+                    GestureDetector(
+                      onTap: widget.toggle1,
+                      child: const Text(
+                        'LOGIN',
+                        style: TextStyle(
+                            color: Colors.blueAccent,
+                            fontWeight: FontWeight.bold),
                       ),
-                      child: TextField(
-                        cursorColor: Colors.greenAccent,
-                        controller: _firstnamecontroller,
-                        style:
-                            const TextStyle(color: Colors.black, fontSize: 15),
-                        decoration: const InputDecoration(
-                            contentPadding: EdgeInsets.only(left: 10),
-                            border: InputBorder.none,
-                            hintText: '  Firstname',
-                            hintStyle: TextStyle(color: Colors.grey)),
-                      ),
-                    ),
-                    SizedBox(
-                      height: height * 0.02,
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(7),
-                      decoration: const BoxDecoration(
-                        color: Apptheme.primary,
-                      ),
-                      child: TextField(
-                        cursorColor: Colors.greenAccent,
-                        controller: _lastnamecontroller,
-                        style:
-                            const TextStyle(color: Colors.black, fontSize: 15),
-                        decoration: const InputDecoration(
-                            contentPadding: EdgeInsets.only(left: 10),
-                            border: InputBorder.none,
-                            hintText: '  lastname',
-                            hintStyle: TextStyle(color: Colors.grey)),
-                      ),
-                    ),
-                    SizedBox(
-                      height: height * 0.02,
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(7),
-                      decoration: const BoxDecoration(
-                        color: Apptheme.primary,
-                      ),
-                      child: TextField(
-                        cursorColor: Colors.greenAccent,
-                        controller: _emailcontroller,
-                        style:
-                            const TextStyle(color: Colors.black, fontSize: 15),
-                        decoration: const InputDecoration(
-                            contentPadding: EdgeInsets.only(left: 10),
-                            border: InputBorder.none,
-                            hintText: '  email',
-                            hintStyle: TextStyle(color: Colors.grey)),
-                      ),
-                    ),
-                    SizedBox(
-                      height: height * 0.02,
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(7),
-                      decoration: const BoxDecoration(
-                        color: Apptheme.primary,
-                      ),
-                      child: TextField(
-                        cursorColor: Colors.greenAccent,
-                        controller: _passwordcontroller,
-                        obscureText: true,
-                        style:
-                            const TextStyle(color: Colors.black, fontSize: 15),
-                        decoration: const InputDecoration(
-                            contentPadding: EdgeInsets.only(left: 10),
-                            border: InputBorder.none,
-                            hintText: '  Password',
-                            hintStyle: TextStyle(color: Colors.grey)),
-                      ),
-                    ),
-                    SizedBox(
-                      height: height * 0.02,
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(7),
-                      decoration: const BoxDecoration(
-                        color: Apptheme.primary,
-                      ),
-                      child: TextField(
-                        cursorColor: Colors.greenAccent,
-                        controller: _confirmpasswordcontroller,
-                        obscureText: true,
-                        style:
-                            const TextStyle(color: Colors.black, fontSize: 15),
-                        decoration: const InputDecoration(
-                            contentPadding: EdgeInsets.only(left: 10),
-                            border: InputBorder.none,
-                            hintText: '  Confirm password',
-                            hintStyle: TextStyle(color: Colors.grey)),
-                      ),
-                    ),
-                    SizedBox(
-                      height: height * 0.02,
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(7),
-                      decoration: const BoxDecoration(
-                        color: Apptheme.primary,
-                      ),
-                      child: TextField(
-                        cursorColor: Colors.greenAccent,
-                        controller: _agecontroller,
-                        style:
-                            const TextStyle(color: Colors.black, fontSize: 15),
-                        decoration: const InputDecoration(
-                            contentPadding: EdgeInsets.only(left: 10),
-                            border: InputBorder.none,
-                            hintText: '  Age',
-                            hintStyle: TextStyle(color: Colors.grey)),
-                      ),
-                    ),
-                    SizedBox(
-                      height: height * 0.02,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 100),
-                      child: GestureDetector(
-                        onTap: () {},
-                        child: Container(
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: const Color.fromARGB(255, 50, 47, 80),
-                          ),
-                          child: Center(
-                            child: Text(
-                              'SIGNUP',
-                              style: TextStyle(
-                                color: Apptheme.primary,
-                                fontSize: height / 35,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: height * 0.02,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text(
-                          'Already a member?',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(
-                          width: 20,
-                        ),
-                        GestureDetector(
-                          onTap: widget.toggle1,
-                          child: const Text(
-                            'LOGIN',
-                            style: TextStyle(
-                                color: Colors.blueAccent,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        )
-                      ],
                     )
                   ],
-                ),
-              ),
+                )
+              ],
             ),
           ),
         ));

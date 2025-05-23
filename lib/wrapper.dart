@@ -1,6 +1,6 @@
-import 'package:buffermann/auth/authenticate.dart';
-import 'package:buffermann/screens/home.dart';
 import 'package:flutter/material.dart';
+import 'package:hackathon_project/Auth/Authenticate.dart';
+import 'package:hackathon_project/screens/main_screens/home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Wrapper extends StatefulWidget {
