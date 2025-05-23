@@ -33,7 +33,7 @@ const textygreen = TextStyle(
 
 class Apptheme {
   static const grey = Color.fromARGB(255, 239, 243, 251);
-  static const primary = Color.fromARGB(255, 14, 86, 221);
+  static const primary = Color.fromARGB(255, 75, 97, 209);
 
   static const primarycolor = Color.fromRGBO(28, 143, 106, 1);
   static const yellowcolor = Color.fromRGBO(255, 255, 0, 1);

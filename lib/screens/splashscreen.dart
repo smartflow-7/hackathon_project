@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:hackathon_project/components/Apptheme.dart';
 import 'package:hackathon_project/screens/onboarding/pageview.dart';
 import 'dart:async';
@@ -28,18 +29,24 @@ class _SplashscreenState extends State<Splashscreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(
+            SvgPicture.asset(
+              'lib/assets/logo.svg',
+              width: 45,
+              height: 45,
+            ),
+            const SizedBox(
               width: 20,
             ),
-            Text(
-              'Splashscreen',
-              style: loginstyle,
+            SvgPicture.asset(
+              'lib/assets/stockup.svg',
+              width: 145,
+              height: 35,
             ),
           ],
         ),

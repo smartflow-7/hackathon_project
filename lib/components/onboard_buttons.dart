@@ -23,6 +23,8 @@ class Onboardbuttons extends StatelessWidget {
             '$buttonindex',
             style: TextStyle(
               fontSize: 20,
+              fontFamily: 'Gilroy',
+              fontWeight: FontWeight.w600,
               color: buttonindex == index + 1 ? Colors.white : Colors.black,
             ),
           ),

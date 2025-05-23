@@ -64,7 +64,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - lib/Assets/
+    - lib/assets/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
@@ -77,17 +77,46 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
-  #
+  fonts:
+    - family: Fractul
+      fonts:
+        - asset: fonts/Fractul/Fractul-Black.ttf
+          weight: 900
+        - asset: fonts/Fractul/Fractul-ExtraBold.ttf
+          weight: 800
+        - asset: fonts/Fractul/Fractul-Bold.ttf
+          weight: 700
+        - asset: fonts/Fractul/Fractul-SemiBoldItalic.ttf
+          weight: 600
+        - asset: fonts/Fractul/Fractul-Medium.ttf
+          weight: 500
+        - asset: fonts/Fractul/Fractul-Thin.ttf
+          weight: 100
+        - asset: fonts/Fractul/Fractul-Regular.ttf
+          weight: 400
+        - asset: fonts/Fractul/Fractul-Light.ttf
+          weight: 300
+        # - asset: Assets/fonts/Fractul/Fractul-Thin.ttf
+        #   weight: 200
+
+    - family: Gilroy
+      fonts:
+        - asset: fonts/Gilroy/Gilroy-Black.ttf
+          weight: 900
+        - asset: fonts/Gilroy/Gilroy-Extrabold.ttf
+          weight: 800
+        - asset: fonts/Gilroy/Gilroy-Bold.ttf
+          weight: 700
+        - asset: fonts/Gilroy/Gilroy-SemiboldItalic.ttf
+          weight: 600
+        - asset: fonts/Gilroy/Gilroy-Medium.ttf
+          weight: 500
+        - asset: fonts/Gilroy/Gilroy-Thin.ttf
+          weight: 100
+        - asset: fonts/Gilroy/Gilroy-Regular.ttf
+          weight: 400
+        - asset: fonts/Gilroy/Gilroy-Light.ttf
+          weight: 300
+
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package

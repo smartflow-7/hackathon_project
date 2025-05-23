@@ -63,7 +63,7 @@ class Onboardingstack extends StatelessWidget {
               child: Center(
                 child: _currentIndex == 2
                     ? const Text(
-                        'Get Started',
+                        'Jump rigt in',
                         style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
