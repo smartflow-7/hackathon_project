@@ -82,18 +82,21 @@ class Navbutton extends StatelessWidget {
         borderRadius: BorderRadius.circular(100),
         child: ClipRRect(
             borderRadius: BorderRadius.circular(100),
-            child: Ink(
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
               width: 68,
               height: 68,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(100),
-                color: selectedindex != index ? Colors.white : Apptheme.primary,
+                color:
+                    selectedindex != index ? Apptheme.mygrey : Apptheme.primary,
               ),
               child: Center(
                   child: Icon(
                 icon,
                 size: 24,
-                color: selectedindex == index ? Colors.white : Apptheme.primary,
+                color:
+                    selectedindex == index ? Colors.white : Apptheme.lightgrey,
               )),
             )),
       ),

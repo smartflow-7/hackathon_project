@@ -7,6 +7,7 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    int selectedindex = 0;
     return Scaffold(
       backgroundColor: Colors.white,
       body: Padding(
@@ -18,15 +19,31 @@ class Home extends StatelessWidget {
               child: Align(
                 alignment: Alignment.bottomCenter,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 34),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 34, vertical: 40),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Navbutton(
                           tapped: () {},
+                          index: 0,
+                          selectedindex: selectedindex,
+                          icon: Iconsax.home_1_copy),
+                      Navbutton(
+                          tapped: () {},
                           index: 1,
-                          selectedindex: 1,
-                          icon: Iconsax.home_1_copy)
+                          selectedindex: selectedindex,
+                          icon: Iconsax.wallet_3_copy),
+                      Navbutton(
+                          tapped: () {},
+                          index: 2,
+                          selectedindex: selectedindex,
+                          icon: Iconsax.home_1_copy),
+                      Navbutton(
+                          tapped: () {},
+                          index: 3,
+                          selectedindex: selectedindex,
+                          icon: Iconsax.home_1_copy),
                     ],
                   ),
                 ),
