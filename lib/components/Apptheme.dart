@@ -35,7 +35,7 @@ class Apptheme {
   static const grey = Color.fromARGB(255, 239, 243, 251);
   static const primary = Color.fromARGB(255, 75, 97, 209);
   static const mygrey = Color(0xFFF6F7F7);
-  static const lightgrey = Color.fromARGB(255, 204, 204, 204);
+  static const lightgrey = Color.fromARGB(255, 172, 172, 172);
 
   static const primarycolor = Color.fromRGBO(28, 143, 106, 1);
   static const yellowcolor = Color.fromRGBO(255, 255, 0, 1);

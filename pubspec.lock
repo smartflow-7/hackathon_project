@@ -344,6 +344,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.4.1"
+  simple_numpad:
+    dependency: "direct main"
+    description:
+      name: simple_numpad
+      sha256: "329f407399281e2e8bd28d0883c395b7c0dacb8c16062eca88e084f42b58c4be"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.5"
   sky_engine:
     dependency: transitive
     description: flutter
