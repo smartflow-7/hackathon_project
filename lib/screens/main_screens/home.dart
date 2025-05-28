@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:hackathon_project/Auth/api_service.dart';
 import 'package:hackathon_project/components/button.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
+import 'package:provider/provider.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});
@@ -8,6 +10,7 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     int selectedindex = 0;
+    final authProvider = Provider.of<AuthProvider>(context);
     return Scaffold(
       backgroundColor: Colors.white,
       body: Padding(
@@ -25,7 +28,9 @@ class Home extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Navbutton(
-                          tapped: () {},
+                          tapped: () {
+                            authProvider.signOut();
+                          },
                           index: 0,
                           selectedindex: selectedindex,
                           icon: Iconsax.home_1_copy),

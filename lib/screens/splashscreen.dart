@@ -7,6 +7,8 @@ import 'package:hackathon_project/logic/is_opening_app.dart';
 import 'package:hackathon_project/screens/onboarding/pageview.dart';
 import 'dart:async';
 
+import 'package:hackathon_project/wrapper.dart';
+
 class Splashscreen extends StatefulWidget {
   const Splashscreen({super.key});
 
@@ -45,7 +47,7 @@ class _SplashscreenState extends State<Splashscreen> {
       // Navigate to main screen
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const Authenticate()),
+        MaterialPageRoute(builder: (context) => const Wrapper()),
       );
     }
   }

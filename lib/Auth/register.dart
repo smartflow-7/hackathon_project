@@ -1,7 +1,9 @@
 // ignore_for_file: avoid_print
 import 'package:flutter/material.dart';
+import 'package:hackathon_project/Auth/api_service.dart';
 import 'package:hackathon_project/components/apptheme.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
+import 'package:provider/provider.dart';
 
 class Register extends StatefulWidget {
   const Register({super.key, required this.toggle1});
@@ -53,6 +55,14 @@ class _RegisterState extends State<Register> {
 
   @override
   Widget build(BuildContext context) {
+    String passwordisvalid(String a, String b) {
+      if (a == b) {
+        return a;
+      } else {
+        print('error');
+        return '';
+      }
+    }
     // SIGNUP FUNCTION
 //     Future signup() async {
 //       bool passwordisequal() {
@@ -120,8 +130,10 @@ class _RegisterState extends State<Register> {
     double height = size.height;
     print(height);
     print(width);
+    final authProvider = Provider.of<AuthProvider>(context);
 
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
         body: Padding(
           padding: EdgeInsets.only(
@@ -203,11 +215,46 @@ class _RegisterState extends State<Register> {
                         borderRadius: BorderRadius.circular(32),
                       ),
                     ),
+                    child: TextField(
+                      textAlignVertical: TextAlignVertical.center,
+                      cursorColor: Apptheme.primary,
+                      controller: _firstnamecontroller,
+                      obscureText: hideconfirm,
+                      style: const TextStyle(color: Colors.black, fontSize: 15),
+                      decoration: const InputDecoration(
+                          contentPadding: EdgeInsets.only(left: 10),
+                          // prefixIcon: icon,
+                          border: InputBorder.none,
+                          prefixIcon: Icon(
+                            Iconsax.profile_circle_copy,
+                            color: Apptheme.lightgrey,
+                          ),
+                          hintText: 'Enter your username',
+                          hintStyle: TextStyle(
+                            color: Apptheme.lightgrey,
+                            fontSize: 16,
+                            fontFamily: 'Gilroy',
+                            fontWeight: FontWeight.w500,
+                            height: 1.50,
+                          )),
+                    ),
+                  ),
+                  SizedBox(
+                    height: height * 0.023,
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(7),
+                    decoration: ShapeDecoration(
+                      color: Apptheme.mygrey,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(32),
+                      ),
+                    ),
                     child: Center(
                       child: TextField(
                         textAlignVertical: TextAlignVertical.center,
                         cursorColor: Apptheme.primary,
-                        controller: _firstnamecontroller,
+                        controller: _passwordcontroller,
                         obscureText: hidecreate,
                         style:
                             const TextStyle(color: Colors.black, fontSize: 15),
@@ -253,7 +300,7 @@ class _RegisterState extends State<Register> {
                     child: TextField(
                       textAlignVertical: TextAlignVertical.center,
                       cursorColor: Apptheme.primary,
-                      controller: _lastnamecontroller,
+                      controller: _confirmpasswordcontroller,
                       obscureText: hideconfirm,
                       style: const TextStyle(color: Colors.black, fontSize: 15),
                       decoration: InputDecoration(
@@ -341,7 +388,18 @@ class _RegisterState extends State<Register> {
               Column(
                 children: [
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      if (_passwordcontroller.text ==
+                          _confirmpasswordcontroller.text) {
+                        authProvider.signUp(
+                            email: _emailcontroller.text,
+                            password: passwordisvalid(_passwordcontroller.text,
+                                _confirmpasswordcontroller.text),
+                            name: _firstnamecontroller.text);
+                      } else {
+                        print('passwords are not the same');
+                      }
+                    },
                     child: Container(
                       padding: const EdgeInsets.all(26.5),
                       decoration: BoxDecoration(

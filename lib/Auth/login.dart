@@ -1,11 +1,13 @@
 // ignore_for_file: avoid_print
 
 import 'package:flutter/material.dart';
+import 'package:hackathon_project/Auth/api_service.dart';
 import 'package:hackathon_project/Auth/forgottenpassword/forgot_password.dart';
 import 'package:hackathon_project/components/apptheme.dart';
 import 'package:hackathon_project/logic/is_opening_app.dart';
 import 'package:hackathon_project/screens/main_screens/home.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
+import 'package:provider/provider.dart';
 
 class Login extends StatefulWidget {
   final VoidCallback change;
@@ -43,9 +45,12 @@ class _LoginState extends State<Login> {
     //double width = size.width;
     double height = size.height;
     double width = size.width;
+    final authProvider = Provider.of<AuthProvider>(context);
+    // final user = authProvider.user;
 
     return Scaffold(
         backgroundColor: Colors.white,
+        resizeToAvoidBottomInset: false,
         body: Padding(
           padding: EdgeInsets.only(
               top: height * 0.078, left: width * 0.058, right: 10, bottom: 40),
@@ -99,7 +104,7 @@ class _LoginState extends State<Login> {
                       textAlignVertical: TextAlignVertical.center,
                       cursorColor: Apptheme.primary,
                       controller: _emailcontroller,
-                      style: const TextStyle(color: Colors.white, fontSize: 15),
+                      style: const TextStyle(color: Colors.black, fontSize: 15),
                       decoration: const InputDecoration(
                           contentPadding: EdgeInsets.only(left: 10),
                           border: InputBorder.none,
@@ -210,12 +215,15 @@ class _LoginState extends State<Login> {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (BuildContext context) => const Home(),
-                        ),
-                      );
-                      FirstTimeUserManager.resetFirstTime();
+                      authProvider.signIn(
+                          email: _emailcontroller.text,
+                          password: _passwordcontroller.text);
+                      // Navigator.of(context).push(
+                      //   MaterialPageRoute(
+                      //     builder: (BuildContext context) => const Home(),
+                      //   ),
+                      // );
+                      // FirstTimeUserManager.resetFirstTime();
                     },
                     child: Container(
                       padding: const EdgeInsets.all(26.5),
