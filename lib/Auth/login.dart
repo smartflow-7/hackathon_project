@@ -5,7 +5,7 @@ import 'package:hackathon_project/Auth/api_service.dart';
 import 'package:hackathon_project/Auth/forgottenpassword/forgot_password.dart';
 import 'package:hackathon_project/components/apptheme.dart';
 import 'package:hackathon_project/logic/is_opening_app.dart';
-import 'package:hackathon_project/screens/main_screens/home.dart';
+import 'package:hackathon_project/models/Providers/themeprovider.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -47,9 +47,10 @@ class _LoginState extends State<Login> {
     double width = size.width;
     final authProvider = Provider.of<AuthProvider>(context);
     // final user = authProvider.user;
-
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    var themecolor = Theme.of(context).colorScheme;
     return Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: themecolor.surface,
         resizeToAvoidBottomInset: false,
         body: Padding(
           padding: EdgeInsets.only(
@@ -63,19 +64,23 @@ class _LoginState extends State<Login> {
                   Text(
                     'Welcome ',
                     style: TextStyle(
-                      color: const Color(0xFF03050B),
+                      color: themecolor.onPrimary,
                       fontSize: height * 0.046,
                       fontFamily: 'Fractul',
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  Text(
-                    'back!',
-                    style: TextStyle(
-                      color: Apptheme.primary,
-                      fontSize: height * 0.046,
-                      fontFamily: 'Fractul',
-                      fontWeight: FontWeight.w600,
+                  ShaderMask(
+                    shaderCallback: (bounds) =>
+                        Apptheme.mygrad.createShader(bounds),
+                    child: Text(
+                      'back!',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: height * 0.046,
+                        fontFamily: 'Fractul',
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                   SizedBox(
@@ -95,7 +100,7 @@ class _LoginState extends State<Login> {
                   Container(
                     padding: const EdgeInsets.all(7),
                     decoration: ShapeDecoration(
-                      color: Apptheme.mygrey,
+                      color: themecolor.primaryContainer,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(32),
                       ),
@@ -104,7 +109,8 @@ class _LoginState extends State<Login> {
                       textAlignVertical: TextAlignVertical.center,
                       cursorColor: Apptheme.primary,
                       controller: _emailcontroller,
-                      style: const TextStyle(color: Colors.black, fontSize: 15),
+                      style: const TextStyle(
+                          color: Color(0xFF94959D), fontSize: 15),
                       decoration: const InputDecoration(
                           contentPadding: EdgeInsets.only(left: 10),
                           border: InputBorder.none,
@@ -126,7 +132,7 @@ class _LoginState extends State<Login> {
                   Container(
                     padding: const EdgeInsets.all(7),
                     decoration: ShapeDecoration(
-                      color: Apptheme.mygrey,
+                      color: themecolor.primaryContainer,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(32),
                       ),
@@ -135,8 +141,9 @@ class _LoginState extends State<Login> {
                       textAlignVertical: TextAlignVertical.center,
                       cursorColor: Apptheme.primary,
                       controller: _passwordcontroller,
-                      obscureText: true,
-                      style: const TextStyle(color: Colors.black, fontSize: 15),
+                      obscureText: hidecpassword,
+                      style: const TextStyle(
+                          color: Color(0xFF94959D), fontSize: 15),
                       decoration: InputDecoration(
                           suffixIcon: IconButton(
                             onPressed: togglecreate,
@@ -154,7 +161,9 @@ class _LoginState extends State<Login> {
                           contentPadding: const EdgeInsets.only(left: 10),
                           border: InputBorder.none,
                           hintText: '  Password',
-                          hintStyle: const TextStyle(color: Colors.grey)),
+                          hintStyle: const TextStyle(
+                            color: Color(0xFF94959D),
+                          )),
                     ),
                   ),
                   SizedBox(
@@ -181,6 +190,7 @@ class _LoginState extends State<Login> {
                           const Text(
                             'Remember me',
                             style: TextStyle(
+                                color: Color(0xFF94959D),
                                 fontFamily: 'Gilroy',
                                 fontWeight: FontWeight.w400,
                                 fontSize: 16),
@@ -223,7 +233,8 @@ class _LoginState extends State<Login> {
                       //     builder: (BuildContext context) => const Home(),
                       //   ),
                       // );
-                      // FirstTimeUserManager.resetFirstTime();
+                      FirstTimeUserManager.resetFirstTime();
+                      themeProvider.toggleTheme();
                     },
                     child: Container(
                       padding: const EdgeInsets.all(26.5),

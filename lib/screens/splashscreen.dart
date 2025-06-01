@@ -2,12 +2,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:hackathon_project/Auth/Authenticate.dart';
 import 'package:hackathon_project/logic/is_opening_app.dart';
+import 'package:hackathon_project/models/Providers/themeprovider.dart';
 import 'package:hackathon_project/screens/onboarding/pageview.dart';
 import 'dart:async';
 
 import 'package:hackathon_project/wrapper.dart';
+import 'package:provider/provider.dart';
 
 class Splashscreen extends StatefulWidget {
   const Splashscreen({super.key});
@@ -54,14 +55,18 @@ class _SplashscreenState extends State<Splashscreen> {
 
   @override
   Widget build(BuildContext context) {
+    var back = Theme.of(context).colorScheme;
+    final themeProvider = Provider.of<ThemeProvider>(context);
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: back.surface,
       body: Center(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SvgPicture.asset(
-              'lib/assets/logo.svg',
+              themeProvider.isDarkMode != true
+                  ? 'lib/assets/logo.svg'
+                  : 'lib/assets/darklogo.svg',
               width: 45,
               height: 45,
             ),
@@ -69,7 +74,9 @@ class _SplashscreenState extends State<Splashscreen> {
               width: 20,
             ),
             SvgPicture.asset(
-              'lib/assets/stockup.svg',
+              themeProvider.isDarkMode != true
+                  ? 'lib/assets/stockup.svg'
+                  : 'lib/assets/stockup_dark.svg',
               width: 145,
               height: 35,
             ),

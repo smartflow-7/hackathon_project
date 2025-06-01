@@ -131,10 +131,11 @@ class _RegisterState extends State<Register> {
     print(height);
     print(width);
     final authProvider = Provider.of<AuthProvider>(context);
+    var themecolor = Theme.of(context).colorScheme;
 
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        backgroundColor: Colors.white,
+        backgroundColor: themecolor.surface,
         body: Padding(
           padding: EdgeInsets.only(
               top: height * 0.078, left: width * 0.058, right: 10, bottom: 40),
@@ -147,7 +148,7 @@ class _RegisterState extends State<Register> {
                   Text(
                     'Hello ',
                     style: TextStyle(
-                      color: const Color(0xFF03050B),
+                      color: themecolor.onPrimary,
                       fontSize: height * 0.046,
                       fontFamily: 'Fractul',
                       fontWeight: FontWeight.w600,
@@ -156,7 +157,7 @@ class _RegisterState extends State<Register> {
                   Text(
                     'there!',
                     style: TextStyle(
-                      color: Apptheme.primary,
+                      color: themecolor.primary,
                       fontSize: height * 0.046,
                       fontFamily: 'Fractul',
                       fontWeight: FontWeight.w600,
@@ -165,10 +166,10 @@ class _RegisterState extends State<Register> {
                   SizedBox(
                     height: height * 0.016,
                   ),
-                  const Text(
+                  Text(
                     'Create an account to start your trading journey, with the best tools we have to offer',
                     style: TextStyle(
-                      color: Color(0xFF94959D),
+                      color: themecolor.onPrimaryContainer,
                       fontSize: 16,
                       fontFamily: 'Gilroy',
                       fontWeight: FontWeight.w500,
@@ -179,7 +180,7 @@ class _RegisterState extends State<Register> {
                   Container(
                     padding: const EdgeInsets.all(7),
                     decoration: ShapeDecoration(
-                      color: Apptheme.mygrey,
+                      color: themecolor.primaryContainer,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(32),
                       ),
@@ -189,16 +190,16 @@ class _RegisterState extends State<Register> {
                       cursorColor: Apptheme.primary,
                       controller: _emailcontroller,
                       style: const TextStyle(color: Colors.black, fontSize: 15),
-                      decoration: const InputDecoration(
-                          contentPadding: EdgeInsets.only(left: 10),
+                      decoration: InputDecoration(
+                          contentPadding: const EdgeInsets.only(left: 10),
                           border: InputBorder.none,
                           prefixIcon: Icon(
                             Iconsax.sms_copy,
-                            color: Apptheme.lightgrey,
+                            color: themecolor.onPrimaryContainer,
                           ),
                           hintText: 'Enter your mail',
                           hintStyle: TextStyle(
-                            color: Apptheme.lightgrey,
+                            color: themecolor.onPrimaryContainer,
                             fontSize: 16,
                             fontFamily: 'Gilroy',
                             fontWeight: FontWeight.w500,
@@ -210,7 +211,7 @@ class _RegisterState extends State<Register> {
                   Container(
                     padding: const EdgeInsets.all(7),
                     decoration: ShapeDecoration(
-                      color: Apptheme.mygrey,
+                      color: themecolor.primaryContainer,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(32),
                       ),
@@ -221,17 +222,17 @@ class _RegisterState extends State<Register> {
                       controller: _firstnamecontroller,
                       obscureText: hideconfirm,
                       style: const TextStyle(color: Colors.black, fontSize: 15),
-                      decoration: const InputDecoration(
-                          contentPadding: EdgeInsets.only(left: 10),
+                      decoration: InputDecoration(
+                          contentPadding: const EdgeInsets.only(left: 10),
                           // prefixIcon: icon,
                           border: InputBorder.none,
                           prefixIcon: Icon(
                             Iconsax.profile_circle_copy,
-                            color: Apptheme.lightgrey,
+                            color: themecolor.onPrimaryContainer,
                           ),
                           hintText: 'Enter your username',
                           hintStyle: TextStyle(
-                            color: Apptheme.lightgrey,
+                            color: themecolor.onPrimaryContainer,
                             fontSize: 16,
                             fontFamily: 'Gilroy',
                             fontWeight: FontWeight.w500,
@@ -245,7 +246,7 @@ class _RegisterState extends State<Register> {
                   Container(
                     padding: const EdgeInsets.all(7),
                     decoration: ShapeDecoration(
-                      color: Apptheme.mygrey,
+                      color: themecolor.primaryContainer,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(32),
                       ),
@@ -268,16 +269,16 @@ class _RegisterState extends State<Register> {
                                 hidecreate == true
                                     ? Iconsax.eye_slash_copy
                                     : Iconsax.eye_copy,
-                                color: Apptheme.lightgrey,
+                                color: themecolor.onPrimaryContainer,
                               ),
                             ),
-                            prefixIcon: const Icon(
+                            prefixIcon: Icon(
                               Iconsax.lock_1_copy,
-                              color: Apptheme.lightgrey,
+                              color: themecolor.onPrimaryContainer,
                             ),
                             hintText: 'Create password',
-                            hintStyle: const TextStyle(
-                              color: Apptheme.lightgrey,
+                            hintStyle: TextStyle(
+                              color: themecolor.onPrimaryContainer,
                               fontSize: 16,
                               fontFamily: 'Gilroy',
                               fontWeight: FontWeight.w500,
@@ -292,7 +293,7 @@ class _RegisterState extends State<Register> {
                   Container(
                     padding: const EdgeInsets.all(7),
                     decoration: ShapeDecoration(
-                      color: Apptheme.mygrey,
+                      color: themecolor.primaryContainer,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(32),
                       ),
@@ -313,16 +314,16 @@ class _RegisterState extends State<Register> {
                               hideconfirm == true
                                   ? Iconsax.eye_slash_copy
                                   : Iconsax.eye_copy,
-                              color: Apptheme.lightgrey,
+                              color: themecolor.onPrimaryContainer,
                             ),
                           ),
-                          prefixIcon: const Icon(
+                          prefixIcon: Icon(
                             Iconsax.lock_1_copy,
-                            color: Apptheme.lightgrey,
+                            color: themecolor.onPrimaryContainer,
                           ),
                           hintText: 'Re-type your password',
-                          hintStyle: const TextStyle(
-                            color: Apptheme.lightgrey,
+                          hintStyle: TextStyle(
+                            color: themecolor.onPrimaryContainer,
                             fontSize: 16,
                             fontFamily: 'Gilroy',
                             fontWeight: FontWeight.w500,
@@ -348,9 +349,10 @@ class _RegisterState extends State<Register> {
                       const SizedBox(
                         width: 8,
                       ),
-                      const Text(
+                      Text(
                         'I agree to the ',
                         style: TextStyle(
+                            color: themecolor.onPrimaryContainer,
                             fontFamily: 'Gilroy',
                             fontWeight: FontWeight.w400,
                             fontSize: 16),
@@ -363,9 +365,10 @@ class _RegisterState extends State<Register> {
                             fontWeight: FontWeight.w600,
                             fontSize: 16),
                       ),
-                      const Text(
+                      Text(
                         'and the ',
                         style: TextStyle(
+                            color: themecolor.onPrimaryContainer,
                             fontFamily: 'Gilroy',
                             fontWeight: FontWeight.w400,
                             fontSize: 16),

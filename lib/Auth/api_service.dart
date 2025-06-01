@@ -140,20 +140,25 @@ class AuthProvider extends ChangeNotifier {
     required String password,
     required String name,
   }) async {
-    _setLoading(true);
-    try {
-      final response = await _authService.signUp(
-        email: email,
-        password: password,
-        name: name,
-      );
-      await _handleAuthSuccess(response);
-      debugPrint('Signed up successfully');
-      debugPrint('auth token: $token');
-    } catch (e) {
-      _setLoading(false);
-      debugPrint('Sign up error: $e');
-      rethrow;
+    if (email.isNotEmpty && password.isNotEmpty) {
+      _setLoading(true);
+      try {
+        final response = await _authService.signUp(
+          email: email,
+          password: password,
+          name: name,
+        );
+        await _handleAuthSuccess(response);
+        debugPrint('Signed up successfully');
+        debugPrint('auth token: $token');
+      } catch (e) {
+        _setLoading(false);
+        debugPrint('Sign up error: $e');
+        rethrow;
+      }
+    } else {
+      // _setLoading(true);
+      debugPrint('empty text fields');
     }
   }
 
@@ -161,18 +166,22 @@ class AuthProvider extends ChangeNotifier {
     required String email,
     required String password,
   }) async {
-    _setLoading(true);
-    try {
-      final response = await _authService.signIn(
-        email: email,
-        password: password,
-      );
-      await _handleAuthSuccess(response);
-      debugPrint('Signed in successfully');
-    } catch (e) {
-      _setLoading(false);
-      debugPrint('Sign in error: $e');
-      rethrow; // Re-enable rethrow to handle errors properly in UI
+    if (email.isNotEmpty && password.isNotEmpty) {
+      _setLoading(true);
+      try {
+        final response = await _authService.signIn(
+          email: email,
+          password: password,
+        );
+        await _handleAuthSuccess(response);
+        debugPrint('Signed in successfully');
+      } catch (e) {
+        _setLoading(false);
+        debugPrint('Sign in error: $e');
+        rethrow; // Re-enable rethrow to handle errors properly in UI
+      }
+    } else {
+      debugPrint('empty text fields');
     }
   }
 

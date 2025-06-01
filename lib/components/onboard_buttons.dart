@@ -9,6 +9,7 @@ class Onboardbuttons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var themecolor = Theme.of(context).colorScheme;
     return Padding(
       padding: const EdgeInsets.only(right: 17.0),
       child: AnimatedContainer(
@@ -16,7 +17,9 @@ class Onboardbuttons extends StatelessWidget {
         width: 40,
         height: 40,
         decoration: BoxDecoration(
-            color: buttonindex == index + 1 ? Apptheme.primary : Apptheme.grey,
+            color: buttonindex == index + 1
+                ? Apptheme.primary
+                : themecolor.primaryContainer,
             shape: BoxShape.circle),
         child: Center(
           child: Text(
@@ -25,7 +28,9 @@ class Onboardbuttons extends StatelessWidget {
               fontSize: 20,
               fontFamily: 'Gilroy',
               fontWeight: FontWeight.w600,
-              color: buttonindex == index + 1 ? Colors.white : Colors.black,
+              color: buttonindex == index + 1
+                  ? themecolor.inversePrimary
+                  : themecolor.onPrimary,
             ),
           ),
         ),

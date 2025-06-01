@@ -58,7 +58,7 @@ class Mybutton extends StatelessWidget {
   }
 }
 
-class Navbutton extends StatelessWidget {
+class Navbutton extends StatefulWidget {
   const Navbutton(
       {super.key,
       required this.tapped,
@@ -71,14 +71,19 @@ class Navbutton extends StatelessWidget {
   final IconData icon;
 
   @override
+  State<Navbutton> createState() => _NavbuttonState();
+}
+
+class _NavbuttonState extends State<Navbutton> {
+  @override
   Widget build(BuildContext context) {
+    var themecolor = Theme.of(context).colorScheme;
     return Material(
       borderRadius: BorderRadius.circular(100),
       child: InkWell(
         splashColor: Apptheme.mygrey,
 
-        onTap: tapped,
-        // onLongPress: clicked,
+        onTap: widget.tapped, // onLongPress: clicked,
         borderRadius: BorderRadius.circular(100),
         child: ClipRRect(
             borderRadius: BorderRadius.circular(100),
@@ -88,15 +93,17 @@ class Navbutton extends StatelessWidget {
               height: 68,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(100),
-                color:
-                    selectedindex != index ? Apptheme.mygrey : Apptheme.primary,
+                color: widget.selectedindex != widget.index
+                    ? themecolor.primaryContainer
+                    : Apptheme.primary,
               ),
               child: Center(
                   child: Icon(
-                icon,
+                widget.icon,
                 size: 24,
-                color:
-                    selectedindex == index ? Colors.white : Apptheme.lightgrey,
+                color: widget.selectedindex == widget.index
+                    ? Colors.white
+                    : Apptheme.lightgrey,
               )),
             )),
       ),

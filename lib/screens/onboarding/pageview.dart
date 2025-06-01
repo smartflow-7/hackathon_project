@@ -17,8 +17,10 @@ class _PageviewsState extends State<Pageviews> {
 
   @override
   Widget build(BuildContext context) {
+    var themecolor = Theme.of(context).colorScheme;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: themecolor.surface,
       body: Stack(
         children: [
           PageView.builder(
@@ -31,10 +33,7 @@ class _PageviewsState extends State<Pageviews> {
                 });
               },
               itemBuilder: (context, index) {
-                return Page1(
-                    svgasset: mypages[_currentIndex].svgasset,
-                    title: mypages[_currentIndex].title,
-                    description: mypages[_currentIndex].description);
+                return onboardpages[index];
               }),
           Onboardingstack(currentIndex: _currentIndex, controller: _controller),
         ],

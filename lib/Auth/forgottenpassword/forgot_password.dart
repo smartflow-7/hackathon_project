@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hackathon_project/Auth/forgottenpassword/OTP_verification.dart';
-import 'package:hackathon_project/Auth/forgottenpassword/enter_new_password.dart';
 import 'package:hackathon_project/components/Apptheme.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 
@@ -19,8 +18,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     //double width = size.width;
     double height = size.height;
     double width = size.width;
+    var themecolor = Theme.of(context).colorScheme;
     return Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: themecolor.surface,
         body: Padding(
           padding: EdgeInsets.only(
               top: height * 0.078, left: width * 0.058, right: 10, bottom: 40),
@@ -33,7 +33,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   Text(
                     'Forgot your',
                     style: TextStyle(
-                      color: const Color(0xFF03050B),
+                      color: themecolor.onPrimary,
                       fontSize: height * 0.046,
                       fontFamily: 'Fractul',
                       fontWeight: FontWeight.w600,
@@ -42,7 +42,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   Text(
                     'password?',
                     style: TextStyle(
-                      color: Apptheme.primary,
+                      color: themecolor.primary,
                       fontSize: height * 0.046,
                       fontFamily: 'Fractul',
                       fontWeight: FontWeight.w600,
@@ -65,7 +65,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   Container(
                     padding: const EdgeInsets.all(7),
                     decoration: ShapeDecoration(
-                      color: Apptheme.mygrey,
+                      color: themecolor.primaryContainer,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(32),
                       ),

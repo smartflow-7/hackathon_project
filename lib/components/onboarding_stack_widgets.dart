@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hackathon_project/Auth/Authenticate.dart';
 import 'package:hackathon_project/components/onboard_buttons.dart';
 import 'package:hackathon_project/logic/is_opening_app.dart';
 import 'package:hackathon_project/wrapper.dart';
@@ -75,14 +74,14 @@ class Onboardingstack extends StatelessWidget {
               child: Center(
                 child: _currentIndex == 2
                     ? const Text(
-                        'Jump rigt in',
+                        'Jump right in',
                         style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                             color: Colors.white),
                       )
                     : const Icon(
-                        Iconsax.arrow_right,
+                        Iconsax.arrow_right_4,
                         color: Colors.white,
                         size: 27,
                       ),
