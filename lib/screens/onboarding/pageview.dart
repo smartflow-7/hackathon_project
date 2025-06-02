@@ -21,6 +21,7 @@ class _PageviewsState extends State<Pageviews> {
 
     return Scaffold(
       backgroundColor: themecolor.surface,
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
           PageView.builder(

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hackathon_project/Auth/api_service.dart';
 import 'package:hackathon_project/components/button.dart';
-import 'package:hackathon_project/models/Providers/themeprovider.dart';
+import 'package:hackathon_project/screens/main_screens/homescreenpages/charts.dart';
+import 'package:hackathon_project/screens/main_screens/homescreenpages/homeview.dart';
+import 'package:hackathon_project/screens/main_screens/homescreenpages/leaderboardpage.dart';
+import 'package:hackathon_project/screens/main_screens/homescreenpages/news.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -13,90 +16,124 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  int selectedindex = 0;
+  final PageController controller = PageController();
+
+  List<Widget> homePages = [
+    const Homeview(),
+    const Leaderboardpage(),
+    const News(),
+    const Charts()
+  ];
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    int selectedindex = 0;
     final authProvider = Provider.of<AuthProvider>(context);
     var themecolor = Theme.of(context).colorScheme;
-    final themeProvider = Provider.of<ThemeProvider>(context);
+
     return Scaffold(
       backgroundColor: themecolor.surface,
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Stack(
-          children: [
-            const Column(),
-            Navbarcustom(
-                authProvider: authProvider, selectedindex: selectedindex)
-          ],
-        ),
+      body: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            child: PageView.builder(
+              itemCount: homePages.length,
+              controller: controller,
+              onPageChanged: (index) {
+                setState(() {
+                  selectedindex = index; // Fixed this line
+                });
+              },
+              itemBuilder: (context, index) {
+                return homePages[index];
+              },
+            ),
+          ),
+          Navbarcustom(
+            currentIndex: selectedindex,
+            onIndexChanged: (index) {
+              setState(() {
+                selectedindex = index;
+              });
+              controller.jumpToPage(index);
+            },
+          )
+        ],
       ),
     );
   }
 }
 
-class Navbarcustom extends StatefulWidget {
-  Navbarcustom({
+class Navbarcustom extends StatelessWidget {
+  final int currentIndex;
+  final Function(int) onIndexChanged;
+
+  const Navbarcustom({
     super.key,
-    required this.authProvider,
-    required this.selectedindex,
+    required this.currentIndex,
+    required this.onIndexChanged,
   });
 
-  final AuthProvider authProvider;
-  int selectedindex;
-
-  @override
-  State<Navbarcustom> createState() => _NavbarcustomState();
-}
-
-class _NavbarcustomState extends State<Navbarcustom> {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Align(
-        alignment: Alignment.bottomCenter,
+    Size size = MediaQuery.of(context).size;
+    final double height = size.height;
+    final double boxheight = height / 8;
+    var themecolor = Theme.of(context).colorScheme;
+
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: themecolor.surface,
+          // borderRadius: BorderRadius.circular(100),
+          boxShadow: const [
+            BoxShadow(
+              color: Color.fromARGB(183, 194, 193, 193),
+              blurRadius: 10,
+              spreadRadius: .2,
+              offset: Offset(0, -2),
+            ),
+          ],
+        ),
+        height: boxheight,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 34, vertical: 40),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Navbutton(
-                  tapped: () {
-                    widget.authProvider.signOut();
-                    setState(() {
-                      widget.selectedindex = 0;
-                    });
-                  },
-                  index: 0,
-                  selectedindex: widget.selectedindex,
-                  icon: Iconsax.home_1_copy),
+                tapped: () => onIndexChanged(0),
+                index: 0,
+                selectedindex: currentIndex,
+                icon: Iconsax.home_1_copy,
+              ),
               Navbutton(
-                  tapped: () {
-                    setState(() {
-                      widget.selectedindex = 1;
-                    });
-                  },
-                  index: 1,
-                  selectedindex: widget.selectedindex,
-                  icon: Iconsax.wallet_3_copy),
+                tapped: () => onIndexChanged(1),
+                index: 1,
+                selectedindex: currentIndex,
+                icon: Iconsax.cup_copy,
+              ),
               Navbutton(
-                  tapped: () {
-                    setState(() {
-                      widget.selectedindex = 2;
-                    });
-                  },
-                  index: 2,
-                  selectedindex: widget.selectedindex,
-                  icon: Iconsax.home_1_copy),
+                tapped: () => onIndexChanged(2),
+                index: 2,
+                selectedindex: currentIndex,
+                icon: Iconsax.firstline_copy,
+              ),
               Navbutton(
-                  tapped: () {
-                    setState(() {
-                      widget.selectedindex = 3;
-                    });
-                  },
-                  index: 3,
-                  selectedindex: widget.selectedindex,
-                  icon: Iconsax.home_1_copy),
+                tapped: () => onIndexChanged(3),
+                index: 3,
+                selectedindex: currentIndex,
+                icon: Iconsax.presention_chart_copy,
+              ),
             ],
           ),
         ),

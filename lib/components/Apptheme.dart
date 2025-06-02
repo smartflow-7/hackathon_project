@@ -56,6 +56,7 @@ class Apptheme {
 
   static const darkg = Color(0xFF0B0C13);
 
+  static const tigerlight = Color.fromARGB(255, 255, 243, 235);
   static const grey = Color.fromARGB(255, 239, 243, 251);
   static const primary = Color.fromARGB(255, 75, 97, 209);
   static const mygrey = Color(0xFFF6F7F7);

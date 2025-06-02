@@ -142,141 +142,65 @@ class _RegisterState extends State<Register> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Hello ',
-                    style: TextStyle(
-                      color: themecolor.onPrimary,
-                      fontSize: height * 0.046,
-                      fontFamily: 'Fractul',
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  Text(
-                    'there!',
-                    style: TextStyle(
-                      color: themecolor.primary,
-                      fontSize: height * 0.046,
-                      fontFamily: 'Fractul',
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  SizedBox(
-                    height: height * 0.016,
-                  ),
-                  Text(
-                    'Create an account to start your trading journey, with the best tools we have to offer',
-                    style: TextStyle(
-                      color: themecolor.onPrimaryContainer,
-                      fontSize: 16,
-                      fontFamily: 'Gilroy',
-                      fontWeight: FontWeight.w500,
-                      height: 1.50,
-                    ),
-                  ),
-                  SizedBox(height: height * 0.046),
-                  Container(
-                    padding: const EdgeInsets.all(7),
-                    decoration: ShapeDecoration(
-                      color: themecolor.primaryContainer,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(32),
+              AutofillGroup(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Hello ',
+                      style: TextStyle(
+                        color: themecolor.onPrimary,
+                        fontSize: height * 0.046,
+                        fontFamily: 'Fractul',
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
-                    child: TextField(
-                      textAlignVertical: TextAlignVertical.center,
-                      cursorColor: Apptheme.primary,
-                      controller: _emailcontroller,
-                      style: const TextStyle(color: Colors.black, fontSize: 15),
-                      decoration: InputDecoration(
-                          contentPadding: const EdgeInsets.only(left: 10),
-                          border: InputBorder.none,
-                          prefixIcon: Icon(
-                            Iconsax.sms_copy,
-                            color: themecolor.onPrimaryContainer,
-                          ),
-                          hintText: 'Enter your mail',
-                          hintStyle: TextStyle(
-                            color: themecolor.onPrimaryContainer,
-                            fontSize: 16,
-                            fontFamily: 'Gilroy',
-                            fontWeight: FontWeight.w500,
-                            height: 1.50,
-                          )),
-                    ),
-                  ),
-                  SizedBox(height: height * 0.023),
-                  Container(
-                    padding: const EdgeInsets.all(7),
-                    decoration: ShapeDecoration(
-                      color: themecolor.primaryContainer,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(32),
+                    Text(
+                      'there!',
+                      style: TextStyle(
+                        color: themecolor.primary,
+                        fontSize: height * 0.046,
+                        fontFamily: 'Fractul',
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
-                    child: TextField(
-                      textAlignVertical: TextAlignVertical.center,
-                      cursorColor: Apptheme.primary,
-                      controller: _firstnamecontroller,
-                      obscureText: hideconfirm,
-                      style: const TextStyle(color: Colors.black, fontSize: 15),
-                      decoration: InputDecoration(
-                          contentPadding: const EdgeInsets.only(left: 10),
-                          // prefixIcon: icon,
-                          border: InputBorder.none,
-                          prefixIcon: Icon(
-                            Iconsax.profile_circle_copy,
-                            color: themecolor.onPrimaryContainer,
-                          ),
-                          hintText: 'Enter your username',
-                          hintStyle: TextStyle(
-                            color: themecolor.onPrimaryContainer,
-                            fontSize: 16,
-                            fontFamily: 'Gilroy',
-                            fontWeight: FontWeight.w500,
-                            height: 1.50,
-                          )),
+                    SizedBox(
+                      height: height * 0.016,
                     ),
-                  ),
-                  SizedBox(
-                    height: height * 0.023,
-                  ),
-                  Container(
-                    padding: const EdgeInsets.all(7),
-                    decoration: ShapeDecoration(
-                      color: themecolor.primaryContainer,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(32),
+                    Text(
+                      'Create an account to start your trading journey, with the best tools we have to offer',
+                      style: TextStyle(
+                        color: themecolor.onPrimaryContainer,
+                        fontSize: 16,
+                        fontFamily: 'Gilroy',
+                        fontWeight: FontWeight.w500,
+                        height: 1.50,
                       ),
                     ),
-                    child: Center(
+                    SizedBox(height: height * 0.046),
+                    Container(
+                      padding: const EdgeInsets.all(7),
+                      decoration: ShapeDecoration(
+                        color: themecolor.primaryContainer,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(32),
+                        ),
+                      ),
                       child: TextField(
                         textAlignVertical: TextAlignVertical.center,
                         cursorColor: Apptheme.primary,
-                        controller: _passwordcontroller,
-                        obscureText: hidecreate,
-                        style:
-                            const TextStyle(color: Colors.black, fontSize: 15),
+                        controller: _emailcontroller,
+                        autofillHints: const [AutofillHints.email],
+                        style: const TextStyle(
+                            color: Color(0xFF94959D), fontSize: 15),
                         decoration: InputDecoration(
                             contentPadding: const EdgeInsets.only(left: 10),
                             border: InputBorder.none,
-                            alignLabelWithHint: true,
-                            suffixIcon: IconButton(
-                              onPressed: togglecreate,
-                              icon: Icon(
-                                hidecreate == true
-                                    ? Iconsax.eye_slash_copy
-                                    : Iconsax.eye_copy,
-                                color: themecolor.onPrimaryContainer,
-                              ),
-                            ),
                             prefixIcon: Icon(
-                              Iconsax.lock_1_copy,
+                              Iconsax.sms_copy,
                               color: themecolor.onPrimaryContainer,
                             ),
-                            hintText: 'Create password',
+                            hintText: 'Enter your mail',
                             hintStyle: TextStyle(
                               color: themecolor.onPrimaryContainer,
                               fontSize: 16,
@@ -286,107 +210,191 @@ class _RegisterState extends State<Register> {
                             )),
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    height: height * 0.023,
-                  ),
-                  Container(
-                    padding: const EdgeInsets.all(7),
-                    decoration: ShapeDecoration(
-                      color: themecolor.primaryContainer,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(32),
+                    SizedBox(height: height * 0.023),
+                    Container(
+                      padding: const EdgeInsets.all(7),
+                      decoration: ShapeDecoration(
+                        color: themecolor.primaryContainer,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(32),
+                        ),
                       ),
-                    ),
-                    child: TextField(
-                      textAlignVertical: TextAlignVertical.center,
-                      cursorColor: Apptheme.primary,
-                      controller: _confirmpasswordcontroller,
-                      obscureText: hideconfirm,
-                      style: const TextStyle(color: Colors.black, fontSize: 15),
-                      decoration: InputDecoration(
-                          contentPadding: const EdgeInsets.only(left: 10),
-                          // prefixIcon: icon,
-                          border: InputBorder.none,
-                          suffixIcon: IconButton(
-                            onPressed: toggleconfirm,
-                            icon: Icon(
-                              hideconfirm == true
-                                  ? Iconsax.eye_slash_copy
-                                  : Iconsax.eye_copy,
+                      child: TextField(
+                        autofillHints: const [AutofillHints.newUsername],
+                        textAlignVertical: TextAlignVertical.center,
+                        cursorColor: Apptheme.primary,
+                        controller: _firstnamecontroller,
+                        obscureText: hideconfirm,
+                        style: const TextStyle(
+                            color: Color(0xFF94959D), fontSize: 15),
+                        decoration: InputDecoration(
+                            contentPadding: const EdgeInsets.only(left: 10),
+                            // prefixIcon: icon,
+                            border: InputBorder.none,
+                            prefixIcon: Icon(
+                              Iconsax.profile_circle_copy,
                               color: themecolor.onPrimaryContainer,
                             ),
-                          ),
-                          prefixIcon: Icon(
-                            Iconsax.lock_1_copy,
-                            color: themecolor.onPrimaryContainer,
-                          ),
-                          hintText: 'Re-type your password',
-                          hintStyle: TextStyle(
-                            color: themecolor.onPrimaryContainer,
-                            fontSize: 16,
-                            fontFamily: 'Gilroy',
-                            fontWeight: FontWeight.w500,
-                            height: 1.50,
-                          )),
+                            hintText: 'Enter your username',
+                            hintStyle: TextStyle(
+                              color: themecolor.onPrimaryContainer,
+                              fontSize: 16,
+                              fontFamily: 'Gilroy',
+                              fontWeight: FontWeight.w500,
+                              height: 1.50,
+                            )),
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    height: height * 0.023,
-                  ),
-                  Row(
-                    children: [
-                      Checkbox(
-                        value: isChecked,
-                        activeColor: Apptheme.primary,
-                        checkColor: Colors.white,
-                        onChanged: (value) {
-                          setState(() {
-                            isChecked = value!;
-                          });
-                        },
+                    SizedBox(
+                      height: height * 0.023,
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(7),
+                      decoration: ShapeDecoration(
+                        color: themecolor.primaryContainer,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(32),
+                        ),
                       ),
-                      const SizedBox(
-                        width: 8,
+                      child: Center(
+                        child: TextField(
+                          autofillHints: const [AutofillHints.newPassword],
+                          textAlignVertical: TextAlignVertical.center,
+                          cursorColor: Apptheme.primary,
+                          controller: _passwordcontroller,
+                          obscureText: hidecreate,
+                          style: const TextStyle(
+                              color: Color(0xFF94959D), fontSize: 15),
+                          decoration: InputDecoration(
+                              contentPadding: const EdgeInsets.only(left: 10),
+                              border: InputBorder.none,
+                              alignLabelWithHint: true,
+                              suffixIcon: IconButton(
+                                onPressed: togglecreate,
+                                icon: Icon(
+                                  hidecreate == true
+                                      ? Iconsax.eye_slash_copy
+                                      : Iconsax.eye_copy,
+                                  color: themecolor.onPrimaryContainer,
+                                ),
+                              ),
+                              prefixIcon: Icon(
+                                Iconsax.lock_1_copy,
+                                color: themecolor.onPrimaryContainer,
+                              ),
+                              hintText: 'Create password',
+                              hintStyle: TextStyle(
+                                color: themecolor.onPrimaryContainer,
+                                fontSize: 16,
+                                fontFamily: 'Gilroy',
+                                fontWeight: FontWeight.w500,
+                                height: 1.50,
+                              )),
+                        ),
                       ),
-                      Text(
-                        'I agree to the ',
-                        style: TextStyle(
-                            color: themecolor.onPrimaryContainer,
-                            fontFamily: 'Gilroy',
-                            fontWeight: FontWeight.w400,
-                            fontSize: 16),
+                    ),
+                    SizedBox(
+                      height: height * 0.023,
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(7),
+                      decoration: ShapeDecoration(
+                        color: themecolor.primaryContainer,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(32),
+                        ),
                       ),
-                      const Text(
-                        'Terms of Service ',
+                      child: TextField(
+                        textAlignVertical: TextAlignVertical.center,
+                        cursorColor: Apptheme.primary,
+                        controller: _confirmpasswordcontroller,
+                        obscureText: hideconfirm,
+                        style: const TextStyle(
+                            color: Color(0xFF94959D), fontSize: 15),
+                        decoration: InputDecoration(
+                            contentPadding: const EdgeInsets.only(left: 10),
+                            // prefixIcon: icon,
+                            border: InputBorder.none,
+                            suffixIcon: IconButton(
+                              onPressed: toggleconfirm,
+                              icon: Icon(
+                                hideconfirm == true
+                                    ? Iconsax.eye_slash_copy
+                                    : Iconsax.eye_copy,
+                                color: themecolor.onPrimaryContainer,
+                              ),
+                            ),
+                            prefixIcon: Icon(
+                              Iconsax.lock_1_copy,
+                              color: themecolor.onPrimaryContainer,
+                            ),
+                            hintText: 'Re-type your password',
+                            hintStyle: TextStyle(
+                              color: themecolor.onPrimaryContainer,
+                              fontSize: 16,
+                              fontFamily: 'Gilroy',
+                              fontWeight: FontWeight.w500,
+                              height: 1.50,
+                            )),
+                      ),
+                    ),
+                    SizedBox(
+                      height: height * 0.023,
+                    ),
+                    Row(
+                      children: [
+                        Checkbox(
+                          value: isChecked,
+                          activeColor: Apptheme.primary,
+                          checkColor: Colors.white,
+                          onChanged: (value) {
+                            setState(() {
+                              isChecked = value!;
+                            });
+                          },
+                        ),
+                        const SizedBox(
+                          width: 8,
+                        ),
+                        Text(
+                          'I agree to the ',
+                          style: TextStyle(
+                              color: themecolor.onPrimaryContainer,
+                              fontFamily: 'Gilroy',
+                              fontWeight: FontWeight.w400,
+                              fontSize: 16),
+                        ),
+                        const Text(
+                          'Terms of Service ',
+                          style: TextStyle(
+                              color: Apptheme.primary,
+                              fontFamily: 'Gilroy',
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16),
+                        ),
+                        Text(
+                          'and the ',
+                          style: TextStyle(
+                              color: themecolor.onPrimaryContainer,
+                              fontFamily: 'Gilroy',
+                              fontWeight: FontWeight.w400,
+                              fontSize: 16),
+                        ),
+                      ],
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(left: 54.0),
+                      child: Text(
+                        'Privacy Policy',
                         style: TextStyle(
                             color: Apptheme.primary,
                             fontFamily: 'Gilroy',
                             fontWeight: FontWeight.w600,
                             fontSize: 16),
                       ),
-                      Text(
-                        'and the ',
-                        style: TextStyle(
-                            color: themecolor.onPrimaryContainer,
-                            fontFamily: 'Gilroy',
-                            fontWeight: FontWeight.w400,
-                            fontSize: 16),
-                      ),
-                    ],
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(left: 54.0),
-                    child: Text(
-                      'Privacy Policy',
-                      style: TextStyle(
-                          color: Apptheme.primary,
-                          fontFamily: 'Gilroy',
-                          fontWeight: FontWeight.w600,
-                          fontSize: 16),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
               Column(
                 children: [

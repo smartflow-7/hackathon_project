@@ -94,8 +94,8 @@ class _NavbuttonState extends State<Navbutton> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(100),
                 color: widget.selectedindex != widget.index
-                    ? themecolor.primaryContainer
-                    : Apptheme.primary,
+                    ? Colors.transparent
+                    : themecolor.primary,
               ),
               child: Center(
                   child: Icon(

@@ -59,6 +59,7 @@ class _SplashscreenState extends State<Splashscreen> {
     final themeProvider = Provider.of<ThemeProvider>(context);
     return Scaffold(
       backgroundColor: back.surface,
+      resizeToAvoidBottomInset: false,
       body: Center(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
