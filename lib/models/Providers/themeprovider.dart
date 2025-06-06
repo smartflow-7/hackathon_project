@@ -149,7 +149,7 @@ class ThemeProvider extends ChangeNotifier {
     const ColorScheme darkColorScheme = ColorScheme(
       brightness: Brightness.dark,
       primary: Colors.white,
-      onPrimary: Colors.white,
+      onPrimary: Colors.white, //text color
       primaryContainer: Color(0xFF0B0D13), //#0B0D13
       onPrimaryContainer: Apptheme.darklightgrey,
       secondary: Color(0xFFCCC2DC),

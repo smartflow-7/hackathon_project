@@ -3,12 +3,14 @@ class PortfolioItem {
   final int quantity;
   final double buyPrice;
   final DateTime date;
+  final String type;
 
   PortfolioItem({
     required this.symbol,
     required this.quantity,
     required this.buyPrice,
     required this.date,
+    required this.type,
   });
 
   Map<String, dynamic> toJson() => {
@@ -25,5 +27,6 @@ class PortfolioItem {
         date: json['date'] != null
             ? DateTime.parse(json['date'])
             : DateTime.now(),
+        type: json['type'] ?? 'stock',
       );
 }

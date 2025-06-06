@@ -64,11 +64,13 @@ class Navbutton extends StatefulWidget {
       required this.tapped,
       required this.index,
       required this.selectedindex,
-      required this.icon});
+      required this.icon,
+      required this.icon_selected});
   final VoidCallback tapped;
   final int index;
   final int selectedindex;
   final IconData icon;
+  final IconData icon_selected;
 
   @override
   State<Navbutton> createState() => _NavbuttonState();
@@ -99,7 +101,9 @@ class _NavbuttonState extends State<Navbutton> {
               ),
               child: Center(
                   child: Icon(
-                widget.icon,
+                widget.selectedindex == widget.index
+                    ? widget.icon
+                    : widget.icon_selected,
                 size: 24,
                 color: widget.selectedindex == widget.index
                     ? Colors.white
