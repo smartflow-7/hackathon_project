@@ -1,7 +1,9 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
-import 'package:hackathon_project/components/Apptheme.dart';
-import 'package:hackathon_project/components/button.dart';
-import 'package:hackathon_project/components/numberpadscreen.dart';
+import 'package:hackathon_project/Widgets/apptheme.dart';
+import 'package:hackathon_project/Widgets/button.dart';
+import 'package:hackathon_project/Widgets/numberpadscreen.dart';
 import 'package:hackathon_project/logic/buttonlogic.dart';
 
 class OtpVerification extends StatefulWidget {

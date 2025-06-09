@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hackathon_project/components/apptheme.dart';
+import 'package:hackathon_project/Widgets/apptheme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ThemeProvider extends ChangeNotifier {
@@ -148,7 +148,7 @@ class ThemeProvider extends ChangeNotifier {
   static ThemeData get darkTheme {
     const ColorScheme darkColorScheme = ColorScheme(
       brightness: Brightness.dark,
-      primary: Colors.white,
+      primary: Apptheme.primary,
       onPrimary: Colors.white, //text color
       primaryContainer: Color(0xFF0B0D13), //#0B0D13
       onPrimaryContainer: Apptheme.darklightgrey,

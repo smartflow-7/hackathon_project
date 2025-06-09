@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hackathon_project/Auth/forgottenpassword/OTP_verification.dart';
-import 'package:hackathon_project/components/Apptheme.dart';
+import 'package:hackathon_project/Widgets/apptheme.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 class ForgotPassword extends StatefulWidget {

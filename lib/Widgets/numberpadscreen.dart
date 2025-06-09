@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hackathon_project/components/Apptheme.dart';
+import 'package:hackathon_project/Widgets/apptheme.dart';
 
 class Codescreen extends StatelessWidget {
   const Codescreen({super.key, required this.num});

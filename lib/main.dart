@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hackathon_project/Auth/api_service.dart';
+import 'package:hackathon_project/models/Providers/api_service.dart';
+import 'package:hackathon_project/models/Providers/leaderboardprovider.dart';
+import 'package:hackathon_project/models/Providers/news_service.dart';
+import 'package:hackathon_project/models/Providers/stock_provider.dart';
 import 'package:hackathon_project/models/Providers/themeprovider.dart';
 import 'package:hackathon_project/screens/splashscreen.dart';
 import 'package:hackathon_project/wrapper.dart';
@@ -17,7 +20,19 @@ void main() async {
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(
+        create: (_) => LeaderboardProvider()..initialize(),
+        child: const Wrapper(),
+      ),
+      ChangeNotifierProvider(
+        create: (_) => NewsProvider(),
+        child: const Wrapper(),
+      ),
+      ChangeNotifierProvider(
         create: (_) => AuthProvider()..initialize(),
+        child: const Wrapper(),
+      ),
+      ChangeNotifierProvider(
+        create: (_) => StockProvider()..initialize(),
         child: const Wrapper(),
       ),
       ChangeNotifierProvider(

@@ -1,7 +1,7 @@
 // ignore_for_file: non_constant_identifier_names, prefer_typing_uninitialized_variables
 
 import 'package:flutter/material.dart';
-import 'package:hackathon_project/components/apptheme.dart';
+import 'package:hackathon_project/Widgets/apptheme.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 class Mybutton extends StatelessWidget {
@@ -91,8 +91,8 @@ class _NavbuttonState extends State<Navbutton> {
             borderRadius: BorderRadius.circular(100),
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 200),
-              width: 68,
-              height: 68,
+              width: 60,
+              height: 60,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(100),
                 color: widget.selectedindex != widget.index

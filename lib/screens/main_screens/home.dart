@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:hackathon_project/Auth/api_service.dart';
-import 'package:hackathon_project/components/button.dart';
+//import 'package:hackathon_project/models/Providers/api_service.dart';
+import 'package:hackathon_project/Widgets/button.dart';
 import 'package:hackathon_project/screens/main_screens/homescreenpages/charts.dart';
 import 'package:hackathon_project/screens/main_screens/homescreenpages/homeview.dart';
 import 'package:hackathon_project/screens/main_screens/homescreenpages/leaderboardpage.dart';
 import 'package:hackathon_project/screens/main_screens/homescreenpages/news.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
-import 'package:provider/provider.dart';
+//import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -34,27 +34,24 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    final authProvider = Provider.of<AuthProvider>(context);
+    // final authProvider = Provider.of<AuthProvider>(context);
     var themecolor = Theme.of(context).colorScheme;
 
     return Scaffold(
       backgroundColor: themecolor.surface,
       body: Stack(
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
-            child: PageView.builder(
-              itemCount: homePages.length,
-              controller: controller,
-              onPageChanged: (index) {
-                setState(() {
-                  selectedindex = index; // Fixed this line
-                });
-              },
-              itemBuilder: (context, index) {
-                return homePages[index];
-              },
-            ),
+          PageView.builder(
+            itemCount: homePages.length,
+            controller: controller,
+            onPageChanged: (index) {
+              setState(() {
+                selectedindex = index; // Fixed this line
+              });
+            },
+            itemBuilder: (context, index) {
+              return homePages[index];
+            },
           ),
           Navbarcustom(
             currentIndex: selectedindex,
@@ -85,7 +82,7 @@ class Navbarcustom extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     final double height = size.height;
-    final double boxheight = height / 8;
+    final double boxheight = height / 9;
     var themecolor = Theme.of(context).colorScheme;
 
     return Align(
@@ -97,16 +94,16 @@ class Navbarcustom extends StatelessWidget {
           // borderRadius: BorderRadius.circular(100),
           boxShadow: const [
             BoxShadow(
-              color: Color.fromARGB(183, 194, 193, 193),
-              blurRadius: 10,
-              spreadRadius: .2,
+              color: Color.fromARGB(111, 187, 187, 187),
+              blurRadius: 50,
+              spreadRadius: 13,
               offset: Offset(0, -2),
             ),
           ],
         ),
         height: boxheight,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 15),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

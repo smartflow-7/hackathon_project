@@ -1,7 +1,7 @@
 // ignore_for_file: avoid_print
 import 'package:flutter/material.dart';
-import 'package:hackathon_project/Auth/api_service.dart';
-import 'package:hackathon_project/components/apptheme.dart';
+import 'package:hackathon_project/models/Providers/api_service.dart';
+import 'package:hackathon_project/Widgets/apptheme.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -224,7 +224,7 @@ class _RegisterState extends State<Register> {
                         textAlignVertical: TextAlignVertical.center,
                         cursorColor: Apptheme.primary,
                         controller: _firstnamecontroller,
-                        obscureText: hideconfirm,
+                        // obscureText: hideconfirm,
                         style: const TextStyle(
                             color: Color(0xFF94959D), fontSize: 15),
                         decoration: InputDecoration(

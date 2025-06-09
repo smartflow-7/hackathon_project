@@ -1,7 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'package:flutter/material.dart';
-import 'package:hackathon_project/components/apptheme.dart';
+import 'package:hackathon_project/Widgets/apptheme.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 class EnterNewPassword extends StatefulWidget {

@@ -75,7 +75,7 @@ class AuthService {
         '/stockUp/user/profile', // Adjust endpoint as needed
         options: Options(
           headers: {
-            'Authorization': 'Bearer $token',
+            'token': token,
           },
         ),
       );
@@ -142,8 +142,11 @@ class AuthProvider extends ChangeNotifier {
   Future<void> initialize() async {
     _setLoading(true);
     try {
+      // Refresh user data from server to get latest information
+      await refreshUserData();
       final storedToken = await _secureStorage.read(key: _tokenKey);
       final storedUserData = await _secureStorage.read(key: _userKey);
+      debugPrint('userid: $userId');
 
       if (storedToken != null) {
         _token = storedToken;
@@ -162,9 +165,6 @@ class AuthProvider extends ChangeNotifier {
             await _secureStorage.delete(key: _userKey);
           }
         }
-
-        // Refresh user data from server to get latest information
-        await refreshUserData();
       }
     } catch (e) {
       debugPrint('Error initializing auth: $e');

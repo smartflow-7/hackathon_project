@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hackathon_project/components/onboard_buttons.dart';
+import 'package:hackathon_project/Widgets/onboard_buttons.dart';
 import 'package:hackathon_project/logic/is_opening_app.dart';
 import 'package:hackathon_project/wrapper.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';

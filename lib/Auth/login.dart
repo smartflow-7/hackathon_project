@@ -1,9 +1,9 @@
 // ignore_for_file: avoid_print
 
 import 'package:flutter/material.dart';
-import 'package:hackathon_project/Auth/api_service.dart';
+import 'package:hackathon_project/models/Providers/api_service.dart';
 import 'package:hackathon_project/Auth/forgottenpassword/forgot_password.dart';
-import 'package:hackathon_project/components/apptheme.dart';
+import 'package:hackathon_project/Widgets/apptheme.dart';
 import 'package:hackathon_project/logic/is_opening_app.dart';
 import 'package:hackathon_project/models/Providers/themeprovider.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
@@ -74,7 +74,7 @@ class _LoginState extends State<Login> {
                     Text(
                       'back!',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: themecolor.primary,
                         fontSize: height * 0.046,
                         fontFamily: 'Fractul',
                         fontWeight: FontWeight.w600,

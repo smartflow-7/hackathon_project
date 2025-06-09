@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:hackathon_project/models/Providers/themeprovider.dart';
+
 import 'package:hackathon_project/models/page_class.dart';
-import 'package:provider/provider.dart';
 
 class Page1 extends StatefulWidget {
   const Page1({
@@ -24,7 +23,7 @@ class _Page1State extends State<Page1> {
     var themecolor = Theme.of(context).colorScheme;
 
     bool isdarkmode = true;
-    final themeProvider = Provider.of<ThemeProvider>(context);
+    //final themeProvider = Provider.of<ThemeProvider>(context);
 
     return Padding(
       padding: const EdgeInsets.only(top: 150.0, left: 32, right: 32),
