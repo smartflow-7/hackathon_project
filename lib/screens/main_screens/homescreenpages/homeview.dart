@@ -5,12 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hackathon_project/Widgets/apptheme.dart';
 import 'package:hackathon_project/logic/Date_time_format.dart';
+import 'package:hackathon_project/logic/suffix.dart';
 import 'package:hackathon_project/models/Providers/api_service.dart';
 import 'package:hackathon_project/Widgets/newstile.dart';
 import 'package:hackathon_project/Widgets/stocktile.dart';
+import 'package:hackathon_project/models/Providers/leaderboardprovider.dart';
 import 'package:hackathon_project/models/Providers/news_service.dart';
 import 'package:hackathon_project/models/Providers/stock_provider.dart';
 import 'package:hackathon_project/models/Providers/themeprovider.dart';
+import 'package:hackathon_project/screens/main_screens/Tradescreens/ViewStock.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:redacted/redacted.dart';
@@ -46,6 +49,8 @@ class _HomeviewState extends State<Homeview> {
   @override
   Widget build(BuildContext context) {
     final stockProvider = Provider.of<StockProvider>(context, listen: true);
+    final leaderProvider =
+        Provider.of<LeaderboardProvider>(context, listen: true);
     var themecolor = Theme.of(context).colorScheme;
     final themeProvider = Provider.of<ThemeProvider>(context);
 
@@ -233,8 +238,7 @@ class _HomeviewState extends State<Homeview> {
                                   ),
                                 ),
                                 TextSpan(
-                                  text: provider.portfolioValue
-                                      .toStringAsFixed(2),
+                                  text: provider.portfolioValue.toString(),
                                   style: TextStyle(
                                     color: themecolor.onPrimary,
                                     fontSize:
@@ -311,67 +315,73 @@ class _HomeviewState extends State<Homeview> {
                   width: 16,
                 ),
                 Expanded(
-                  child: Container(
-                    height: contheight,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16),
-                      color: Apptheme.tigerlight,
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Column(
-                        children: [
-                          Container(
-                            width: 40,
-                            height: 40,
-                            decoration: ShapeDecoration(
-                              color: Apptheme.tigerdark,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(24),
+                  child: GestureDetector(
+                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                      builder: (BuildContext context) => const Viewstock(),
+                    )),
+                    child: Container(
+                      height: contheight,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        color: Apptheme.tigerlight,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Column(
+                          children: [
+                            Container(
+                              width: 40,
+                              height: 40,
+                              decoration: ShapeDecoration(
+                                color: Apptheme.tigerdark,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(24),
+                                ),
+                              ),
+                              child: const Center(
+                                child: Icon(Iconsax.cup,
+                                    size: 20, color: Colors.white),
                               ),
                             ),
-                            child: const Center(
-                              child: Icon(Iconsax.cup,
-                                  size: 20, color: Colors.white),
-                            ),
-                          ),
-                          const Spacer(),
-                          const Text.rich(
-                            TextSpan(
-                              children: [
-                                TextSpan(
-                                  text: '#',
-                                  style: TextStyle(
-                                    color: Color(0xFFFC6A03),
-                                    fontSize: 20,
-                                    fontFamily: 'Gilroy',
-                                    fontWeight: FontWeight.w400,
+                            const Spacer(),
+                            Text.rich(
+                              TextSpan(
+                                children: [
+                                  const TextSpan(
+                                    text: '#',
+                                    style: TextStyle(
+                                      color: Color(0xFFFC6A03),
+                                      fontSize: 20,
+                                      fontFamily: 'Gilroy',
+                                      fontWeight: FontWeight.w400,
+                                    ),
                                   ),
-                                ),
-                                TextSpan(
-                                  text: '127th',
-                                  style: TextStyle(
-                                    color: Color(0xFFFC6A03),
-                                    fontSize: 20,
-                                    fontFamily: 'Gilroy',
-                                    fontWeight: FontWeight.w800,
+                                  TextSpan(
+                                    text:
+                                        getRankWithSuffix(leaderProvider.rank),
+                                    style: const TextStyle(
+                                      color: Color(0xFFFC6A03),
+                                      fontSize: 20,
+                                      fontFamily: 'Gilroy',
+                                      fontWeight: FontWeight.w800,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
+                              textAlign: TextAlign.center,
                             ),
-                            textAlign: TextAlign.center,
-                          ),
-                          const Text(
-                            'Keep it up!',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Color(0xFF03050B),
-                              fontSize: 12,
-                              fontFamily: 'Gilroy',
-                              fontWeight: FontWeight.w500,
-                            ),
-                          )
-                        ],
+                            const Text(
+                              'Keep it up!',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Color(0xFF03050B),
+                                fontSize: 12,
+                                fontFamily: 'Gilroy',
+                                fontWeight: FontWeight.w500,
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),

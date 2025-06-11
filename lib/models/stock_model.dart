@@ -15,10 +15,14 @@ class StockData {
     required this.low,
     required this.previousClose,
     required this.timestamp,
+    required String exchange,
+    required String name,
   });
 
   factory StockData.fromJson(Map<String, dynamic> json) {
     return StockData(
+      name: json['name'],
+      exchange: json['exchange'] ?? '',
       symbol: json['symbol'] ?? '',
       currentPrice: (json['c'] ?? 0.0).toDouble(),
       open: (json['o'] ?? 0.0).toDouble(),

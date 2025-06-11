@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hackathon_project/models/leaderboardmodel.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 
 class ApiService {
   static final ApiService _instance = ApiService._internal();
@@ -52,14 +53,17 @@ class LeaderboardProvider extends ChangeNotifier {
   // Auto-refresh variables
   Timer? _refreshTimer;
   bool _autoRefreshEnabled = false;
-  static const Duration _refreshInterval = Duration(seconds: 10);
+  static const Duration _refreshInterval = Duration(seconds: 60);
   DateTime? _lastRefreshTime;
+  int _rank = 0;
+  String? _cachedUserId; // Cache the user ID to avoid repeated token decoding
 
   // Getters
   List<LeaderboardUser> get users => _users;
   LeaderboardState get state => _state;
   String get errorMessage => _errorMessage;
   bool get autoRefreshEnabled => _autoRefreshEnabled;
+  int get rank => _rank;
   DateTime? get lastRefreshTime => _lastRefreshTime;
 
   // Get time since last refresh
@@ -84,6 +88,13 @@ class LeaderboardProvider extends ChangeNotifier {
 
   /// Initialize the provider - call this when the provider is first created
   Future<void> initialize() async {
+    // Cache user ID once during initialization
+    try {
+      _cachedUserId = await getUserIdFromToken();
+    } catch (e) {
+      debugPrint('Failed to get user ID: $e');
+    }
+
     await fetchLeaderboard();
     startAutoRefresh();
   }
@@ -98,6 +109,7 @@ class LeaderboardProvider extends ChangeNotifier {
       final response = await _apiService.getLeaderboard();
       if (response.success) {
         _users = response.leaderboard;
+        _rank = await getPlayerRank(); // Now properly await the rank
         _state = LeaderboardState.loaded;
         _errorMessage = '';
         _lastRefreshTime = DateTime.now();
@@ -124,6 +136,7 @@ class LeaderboardProvider extends ChangeNotifier {
         // Only update if data actually changed to avoid unnecessary rebuilds
         if (_hasDataChanged(response.leaderboard)) {
           _users = response.leaderboard;
+          _rank = await getPlayerRank(); // Now properly await the rank
           _lastRefreshTime = DateTime.now();
 
           // Only notify if we're not in an error state
@@ -152,6 +165,7 @@ class LeaderboardProvider extends ChangeNotifier {
         _errorMessage = errorMessage;
         notifyListeners();
       }
+      refreshLeaderboard();
       debugPrint('Leaderboard silent refresh error: $e');
     }
   }
@@ -169,6 +183,7 @@ class LeaderboardProvider extends ChangeNotifier {
       final response = await _apiService.getLeaderboard();
       if (response.success) {
         _users = response.leaderboard;
+        _rank = await getPlayerRank(); // Now properly await the rank
         _state = LeaderboardState.loaded;
         _errorMessage = '';
         _lastRefreshTime = DateTime.now();
@@ -236,17 +251,67 @@ class LeaderboardProvider extends ChangeNotifier {
     return false;
   }
 
-  /// Get user rank by username
-  // int? getUserRank(String username) {
-  //   try {
-  //     final user = _users.firstWhere(
-  //       (user) => user.name.toLowerCase() == username.toLowerCase(),
-  //     );
-  //     return user.rank;
-  //   } catch (e) {
-  //     return null;
-  //   }
-  // }
+  /// Get player rank - now properly async
+  Future<int> getPlayerRank() async {
+    try {
+      // Use cached user ID if available, otherwise get it fresh
+      final playerId = _cachedUserId ?? await getUserIdFromToken();
+
+      for (int i = 0; i < users.length; i++) {
+        if (users[i].id == playerId) {
+          return i + 1; // Return 1-based rank
+        }
+      }
+      return -1; // Player not found
+    } catch (e) {
+      debugPrint('Error getting player rank: $e');
+      return -1;
+    }
+  }
+
+  /// Get user ID from JWT token
+  Future<String> getUserIdFromToken() async {
+    try {
+      // Decode the token
+      const storage = FlutterSecureStorage();
+      final token = await storage.read(key: 'auth_token');
+
+      if (token == null || token.isEmpty) {
+        throw Exception('No auth token found');
+      }
+
+      final decodedToken = JwtDecoder.decode(token);
+
+      // Get the user ID (adjust the key based on your token structure)
+      final userId = decodedToken['id']?.toString();
+      debugPrint('User ID from token: $userId');
+
+      if (userId == null) {
+        throw Exception('ID not found in token');
+      }
+
+      return userId;
+    } on FormatException catch (e) {
+      throw Exception('Invalid token format: ${e.message}');
+    } catch (e) {
+      throw Exception('Failed to decode token: $e');
+    }
+  }
+
+  /// Get user rank by username (alternative method)
+  int getUserRankByName(String username) {
+    try {
+      for (int i = 0; i < _users.length; i++) {
+        if (_users[i].name.toLowerCase() == username.toLowerCase()) {
+          return i + 1; // Return 1-based rank
+        }
+      }
+      return -1; // User not found
+    } catch (e) {
+      debugPrint('Error getting user rank by name: $e');
+      return -1;
+    }
+  }
 
   /// Get top N users
   List<LeaderboardUser> getTopUsers(int count) {
@@ -268,6 +333,8 @@ class LeaderboardProvider extends ChangeNotifier {
     _state = LeaderboardState.loading;
     _errorMessage = '';
     _lastRefreshTime = null;
+    _rank = 0;
+    _cachedUserId = null;
     stopAutoRefresh();
     notifyListeners();
   }

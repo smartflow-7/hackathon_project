@@ -115,7 +115,7 @@ class ThemeProvider extends ChangeNotifier {
       primaryContainer: Apptheme.mygrey, //container color e.g text field
       onPrimaryContainer:
           Apptheme.lightgrey, //container text color e.g text on the continer
-      secondary: Color(0xFF625B71),
+      secondary: Colors.black,
       onSecondary: Color(0xFFFFFFFF),
       secondaryContainer: Color(0xFFE8DEF8),
       tertiaryContainer: Color(0xFFFFD8E4),

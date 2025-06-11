@@ -16,14 +16,14 @@ class PortfolioItem {
   Map<String, dynamic> toJson() => {
         'symbol': symbol,
         'quantity': quantity,
-        'buyPrice': buyPrice,
+        'price': buyPrice,
         'date': date.toIso8601String(),
       };
 
   static PortfolioItem fromJson(Map<String, dynamic> json) => PortfolioItem(
         symbol: json['symbol'] ?? '',
         quantity: json['quantity'] ?? 0,
-        buyPrice: (json['buyPrice'] ?? 0).toDouble(),
+        buyPrice: (json['price'] ?? 0).toDouble(),
         date: json['date'] != null
             ? DateTime.parse(json['date'])
             : DateTime.now(),
