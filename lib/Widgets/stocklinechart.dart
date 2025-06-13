@@ -35,6 +35,7 @@ class _StocklinechartState extends State<Stocklinechart> {
 
       // Error state
       if (chart.hasError) {
+        chart.refresh;
         return _buildErrorState(chart.errorMessage);
       }
 
@@ -92,7 +93,7 @@ class _StocklinechartState extends State<Stocklinechart> {
       child: Column(
         children: [
           SizedBox(
-            height: 200,
+            height: 150,
             child: Center(
               child: Text(
                 'Error: $errorMessage',

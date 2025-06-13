@@ -143,7 +143,7 @@ class _HomeviewState extends State<Homeview> {
                     GestureDetector(
                       onTap: () {
                         stockProvider.buyStock(
-                            symbol: 'GOOGL',
+                            symbol: 'AEVA',
                             quantity: 20,
                             token: authProvider.token ?? '');
                       },
@@ -317,7 +317,9 @@ class _HomeviewState extends State<Homeview> {
                 Expanded(
                   child: GestureDetector(
                     onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                      builder: (BuildContext context) => const Viewstock(),
+                      builder: (BuildContext context) => Viewstock(
+                        balance: 200,
+                      ),
                     )),
                     child: Container(
                       height: contheight,

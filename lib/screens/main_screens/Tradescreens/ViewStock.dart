@@ -1,23 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:hackathon_project/Widgets/Time_buttons.dart';
+import 'package:hackathon_project/Widgets/simplestocktile.dart';
 import 'package:hackathon_project/Widgets/stocklinechart.dart';
+import 'package:hackathon_project/models/Providers/api_service.dart';
 import 'package:hackathon_project/models/Providers/chartdataprovider.dart';
+import 'package:hackathon_project/models/Providers/stock_provider.dart';
+import 'package:hackathon_project/screens/main_screens/Tradescreens/Transactionpage.dart';
 import 'package:hackathon_project/screens/main_screens/homescreenpages/charts.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:redacted/redacted.dart';
 
 class Viewstock extends StatelessWidget {
-  const Viewstock({super.key});
+  Viewstock(
+      {super.key,
+      required this.balance,
+      this.exchange,
+      this.name,
+      this.symbol});
+  String? symbol;
+  String? name;
+  double balance;
+  String? exchange;
 
   @override
   Widget build(BuildContext context) {
+    final stockProvider = Provider.of<StockProvider>(context, listen: true);
+    final auth = Provider.of<AuthProvider>(context, listen: true);
+    final token = auth.token;
+
     Size size = MediaQuery.of(context).size;
     final double height = size.height;
     final double boxheight = height / 8.5;
     var themecolor = Theme.of(context).colorScheme;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: themecolor.surface,
+      floatingActionButton: FloatingActionButton(onPressed: () {}),
       body: SafeArea(
         child: Stack(
           children: [
@@ -60,7 +79,7 @@ class Viewstock extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'DNGTE',
+                            symbol!,
                             style: TextStyle(
                               color: themecolor.onPrimary,
                               fontSize: 16,
@@ -68,9 +87,9 @@ class Viewstock extends StatelessWidget {
                               fontWeight: FontWeight.w600,
                             ),
                           ),
-                          const Text(
-                            'Dangote',
-                            style: TextStyle(
+                          Text(
+                            viewlimitText(name!),
+                            style: const TextStyle(
                               color: Color(0xFF94959D),
                               fontSize: 16,
                               fontFamily: 'Gilroy',
@@ -129,7 +148,7 @@ class Viewstock extends StatelessWidget {
                         //spacing: 12,
                         children: [
                           Text(
-                            '\$324.56',
+                            '\$$balance',
                             style: TextStyle(
                               color: themecolor.onPrimary,
                               fontSize: 32,
@@ -234,7 +253,7 @@ class Viewstock extends StatelessWidget {
                     decoration: ShapeDecoration(
                       shape: RoundedRectangleBorder(
                         side: BorderSide(
-                          width: 1,
+                          width: 0.3,
                           color: themecolor.onPrimaryContainer,
                         ),
                         borderRadius: BorderRadius.circular(12),
@@ -382,23 +401,33 @@ class Viewstock extends StatelessWidget {
                         width: 16,
                       ),
                       Expanded(
-                        child: Container(
-                          width: double.infinity,
-                          height: double.infinity,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(32),
-                            color: themecolor.primary,
-                          ),
-                          child: const Center(
-                              child: Text(
-                            'Buy',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontFamily: 'Gilroy',
-                              fontWeight: FontWeight.w600,
+                        child: GestureDetector(
+                          onTap: () =>
+                              Navigator.of(context).push(MaterialPageRoute(
+                            builder: (BuildContext context) => Transactionpage(
+                              symbol: symbol!,
+                              name: name!,
+                              price: balance,
                             ),
                           )),
+                          child: Container(
+                            width: double.infinity,
+                            height: double.infinity,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(32),
+                              color: themecolor.primary,
+                            ),
+                            child: const Center(
+                                child: Text(
+                              'Buy',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontFamily: 'Gilroy',
+                                fontWeight: FontWeight.w600,
+                              ),
+                            )),
+                          ),
                         ),
                       ),
                     ],

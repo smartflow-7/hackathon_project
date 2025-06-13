@@ -47,8 +47,8 @@ class Chartdataprovider with ChangeNotifier {
   void _initializeDio() {
     _dio = Dio();
     _dio.options.baseUrl = _baseUrl;
-    _dio.options.connectTimeout = const Duration(seconds: 30);
-    _dio.options.receiveTimeout = const Duration(seconds: 30);
+    // _dio.options.connectTimeout = const Duration(seconds: 30);
+    //  _dio.options.receiveTimeout = const Duration(seconds: 30);
 
     // Add interceptors for logging (only in debug mode)
     if (kDebugMode) {
@@ -128,57 +128,94 @@ class Chartdataprovider with ChangeNotifier {
 
   Future<void> _processApiResponse(dynamic responseData) async {
     try {
-      List<chartdata> newDataList = [];
+      final newDataList = <chartdata>[];
+      final now = DateTime.now();
+      final oneYearAgo = DateTime(now.year - 1, now.month, now.day);
+
+      dynamic dataToProcess;
 
       if (responseData is List) {
-        // If response is directly a list
-        for (var item in responseData) {
-          if (item is Map<String, dynamic>) {
-            // Convert any int values to double for price fields
-            if (item['price'] is int) {
-              item['price'] = (item['price'] as int).toDouble();
-            }
-            newDataList.add(chartdata.fromJson(item));
-          }
+        dataToProcess = responseData;
+      } else if (responseData is Map) {
+        dataToProcess =
+            responseData['data'] ?? responseData['historical'] ?? responseData;
+        if (dataToProcess is Map) {
+          // Handle case where data is in a map format
+          dataToProcess = [dataToProcess];
         }
-      } else if (responseData is Map<String, dynamic>) {
-        // If response is wrapped in an object
-        if (responseData.containsKey('data')) {
-          List<dynamic> data = responseData['data'];
-          for (var item in data) {
+      }
+
+      if (dataToProcess is List) {
+        for (var item in dataToProcess) {
+          try {
             if (item is Map<String, dynamic>) {
-              // Convert any int values to double for price fields
-              if (item['price'] is int) {
-                item['price'] = (item['price'] as int).toDouble();
+              // Normalize data format
+              final normalized = _normalizeDataItem(item);
+              if (normalized != null) {
+                newDataList.add(normalized);
               }
-              newDataList.add(chartdata.fromJson(item));
             }
+          } catch (e) {
+            debugPrint('Error processing item: $e');
           }
-        } else {
-          // Convert any int values to double for price fields
-          if (responseData['price'] is int) {
-            responseData['price'] = (responseData['price'] as int).toDouble();
-          }
-          // Try to parse the response directly
-          newDataList.add(chartdata.fromJson(responseData));
         }
       }
 
       if (newDataList.isNotEmpty) {
-        // Sort by date (newest first)
+        // Sort and filter recent data
         newDataList.sort((a, b) {
-          if (a.date == null || b.date == null) return 0;
-          return DateTime.parse(b.date!).compareTo(DateTime.parse(a.date!));
+          final aDate = a.date != null ? DateTime.parse(a.date!) : DateTime(0);
+          final bDate = b.date != null ? DateTime.parse(b.date!) : DateTime(0);
+          return bDate.compareTo(aDate);
         });
 
-        _stockDataList = newDataList;
+        // Filter to only keep recent data (adjust range as needed)
+        _stockDataList = newDataList.where((data) {
+          if (data.date == null) return false;
+          final dataDate = DateTime.parse(data.date!);
+          return dataDate.isAfter(oneYearAgo);
+        }).toList();
+
         notifyListeners();
       } else {
-        throw Exception('No valid data found in API response');
+        throw Exception('Received empty or invalid data for $_currentSymbol');
       }
     } catch (e) {
-      _setError('Error processing API response: $e');
+      _setError('Data processing error: ${e.toString()}');
+      _stockDataList = [];
+      notifyListeners();
+      rethrow;
     }
+  }
+
+  chartdata? _normalizeDataItem(Map<String, dynamic> item) {
+    try {
+      // Convert all number types to double
+      final normalized = Map<String, dynamic>.from(item);
+
+      // Handle different API response formats
+      normalized['price'] =
+          _toDouble(item['price'] ?? item['close'] ?? item['adjClose']);
+      normalized['date'] = item['date'] ?? item['timestamp'] ?? item['time'];
+
+      // Additional normalization if needed
+      if (normalized['price'] == null || normalized['date'] == null) {
+        return null;
+      }
+
+      return chartdata.fromJson(normalized);
+    } catch (e) {
+      debugPrint('Normalization error: $e');
+      return null;
+    }
+  }
+
+  double? _toDouble(dynamic value) {
+    if (value == null) return null;
+    if (value is double) return value;
+    if (value is int) return value.toDouble();
+    if (value is String) return double.tryParse(value);
+    return null;
   }
 
   void _handleDioError(DioException e) {
@@ -226,10 +263,34 @@ class Chartdataprovider with ChangeNotifier {
   }
 
   // Change symbol and fetch new data
+  // Add these methods to your existing Chartdataprovider class
+
+// Improved changeSymbol method
   Future<void> changeSymbol(String newSymbol) async {
-    if (newSymbol != _currentSymbol) {
-      _currentSymbol = newSymbol.toUpperCase();
-      await fetchStockData();
+    if (newSymbol.isEmpty) return;
+
+    final cleanSymbol = newSymbol.trim().toUpperCase();
+    if (cleanSymbol == _currentSymbol) return;
+
+    try {
+      _setLoading(true);
+      _clearError();
+      _stockDataList = []; // Clear previous data
+      notifyListeners(); // Immediate UI update
+
+      _currentSymbol = cleanSymbol;
+      await fetchStockData(showLoading: false);
+
+      // Additional validation
+      if (_stockDataList.isEmpty) {
+        _setError('No data available for $cleanSymbol');
+      }
+    } catch (e) {
+      _setError('Failed to load data for $cleanSymbol: ${e.toString()}');
+      _currentSymbol = cleanSymbol; // Still update symbol to show what failed
+      notifyListeners();
+    } finally {
+      _setLoading(false);
     }
   }
 

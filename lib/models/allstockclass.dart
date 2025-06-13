@@ -43,7 +43,7 @@ class Stocks {
   Stocks.fromJson(Map<String, dynamic> json) {
     symbol = json['symbol'];
     name = json['name'];
-    price = json['price'];
+    price = json['price']?.toDouble();
     exchange = json['exchange'];
     exchangeShortName = json['exchangeShortName'];
     type = json['type'];

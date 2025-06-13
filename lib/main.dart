@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hackathon_project/models/Providers/api_service.dart';
 import 'package:hackathon_project/models/Providers/chartdataprovider.dart';
+import 'package:hackathon_project/models/Providers/getallstockprovider.dart';
 import 'package:hackathon_project/models/Providers/leaderboardprovider.dart';
 import 'package:hackathon_project/models/Providers/news_service.dart';
 import 'package:hackathon_project/models/Providers/stock_provider.dart';
@@ -43,6 +44,10 @@ void main() async {
       ),
       ChangeNotifierProvider(
         create: (_) => Chartdataprovider(),
+        child: const Wrapper(),
+      ),
+      ChangeNotifierProvider(
+        create: (_) => AllStockProvider(),
         child: const Wrapper(),
       ),
     ],

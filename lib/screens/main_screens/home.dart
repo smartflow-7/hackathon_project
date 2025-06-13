@@ -38,6 +38,7 @@ class _HomeState extends State<Home> {
     var themecolor = Theme.of(context).colorScheme;
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: themecolor.surface,
       body: Stack(
         children: [
