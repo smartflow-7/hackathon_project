@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hackathon_project/Widgets/Time_buttons.dart';
 import 'package:hackathon_project/Widgets/simplestocktile.dart';
 import 'package:hackathon_project/Widgets/stocklinechart.dart';
 import 'package:hackathon_project/models/Providers/api_service.dart';
 import 'package:hackathon_project/models/Providers/chartdataprovider.dart';
 import 'package:hackathon_project/models/Providers/stock_provider.dart';
+import 'package:hackathon_project/models/stock_model.dart';
 import 'package:hackathon_project/screens/main_screens/Tradescreens/Transactionpage.dart';
 import 'package:hackathon_project/screens/main_screens/homescreenpages/charts.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:redacted/redacted.dart';
 
-class Viewstock extends StatelessWidget {
+class Viewstock extends StatefulWidget {
   Viewstock(
       {super.key,
       required this.balance,
@@ -22,6 +24,72 @@ class Viewstock extends StatelessWidget {
   String? name;
   double balance;
   String? exchange;
+
+  @override
+  State<Viewstock> createState() => _ViewstockState();
+}
+
+class _ViewstockState extends State<Viewstock> {
+  StockData? _stockData;
+  bool _isLoading = false;
+  String? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadStockData(); // Automatically load data when screen opens
+  }
+
+  Future<void> _loadStockData() async {
+    final stockProvider = Provider.of<StockProvider>(
+      context,
+      listen: false,
+    );
+
+    setState(() {
+      _isLoading = true;
+      _error = null;
+    });
+
+    try {
+      final token = await const FlutterSecureStorage().read(key: 'auth_token');
+      if (token == null) {
+        setState(() {
+          _error = 'Authentication required';
+          _isLoading = false;
+        });
+        return;
+      }
+
+      // First check cache
+      if (widget.symbol != null &&
+          stockProvider.stockCache.containsKey(widget.symbol!.toUpperCase())) {
+        setState(() {
+          _stockData = stockProvider.stockCache[widget.symbol!.toUpperCase()];
+          _isLoading = false;
+        });
+        return;
+      }
+
+      // If not in cache, fetch from API
+      final stockData = await stockProvider.searchStock(
+        widget.symbol!,
+        token,
+      );
+
+      setState(() {
+        _stockData = stockData;
+        _isLoading = false;
+        print('object');
+        print(_stockData);
+      });
+    } catch (e) {
+      setState(() {
+        _error = e.toString();
+        _isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +147,7 @@ class Viewstock extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            symbol!,
+                            widget.symbol!,
                             style: TextStyle(
                               color: themecolor.onPrimary,
                               fontSize: 16,
@@ -88,7 +156,7 @@ class Viewstock extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            viewlimitText(name!),
+                            viewlimitText(widget.name!),
                             style: const TextStyle(
                               color: Color(0xFF94959D),
                               fontSize: 16,
@@ -148,7 +216,7 @@ class Viewstock extends StatelessWidget {
                         //spacing: 12,
                         children: [
                           Text(
-                            '\$$balance',
+                            '\$${widget.balance}',
                             style: TextStyle(
                               color: themecolor.onPrimary,
                               fontSize: 32,
@@ -156,32 +224,45 @@ class Viewstock extends StatelessWidget {
                               fontWeight: FontWeight.w600,
                             ),
                           ),
-                          const Row(
+                          Row(
                             mainAxisSize: MainAxisSize.min,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             // spacing: 4,
                             children: [
-                              SizedBox(width: 16, height: 16, child: Stack()),
+                              const SizedBox(
+                                  width: 16, height: 16, child: Stack()),
                               Text(
-                                '+\$18.6',
+                                (_stockData?.changeAmount != null
+                                    ? '\$${_stockData!.changeAmount}'
+                                    : '-'),
                                 style: TextStyle(
-                                  color: Color(0xFF018C49),
+                                  color: _stockData?.isPositive == true
+                                      ? const Color(0xFF018C49)
+                                      : Colors.red,
                                   fontSize: 16,
                                   fontFamily: 'Gilroy',
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
+                              const SizedBox(
+                                width: 8,
+                              ),
                               Text(
-                                '(4.32%)',
+                                (_stockData?.changePercent != null
+                                    ? '${_stockData!.changePercent}%'
+                                    : '-'),
                                 style: TextStyle(
-                                  color: Color(0xFF018C49),
+                                  color: _stockData?.isPositive == true
+                                      ? const Color(0xFF018C49)
+                                      : Colors.red,
                                   fontSize: 16,
                                   fontFamily: 'Gilroy',
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
-                              SizedBox(width: 16, height: 16, child: Stack()),
+                              const SizedBox(
+                                  width: 16, height: 16, child: Stack()),
                             ],
                           ),
                           const Text(
@@ -241,7 +322,10 @@ class Viewstock extends StatelessWidget {
 
                   ////////////////////////////////////////////////////
                   // Stocklinechart(themecolor: themecolor),
-                  Stocklinechart(themecolor: themecolor),
+                  Stocklinechart(
+                    themecolor: themecolor,
+                    symbol: widget.symbol!,
+                  ),
                   ////////////////////////////////////////
                   const SizedBox(
                     height: 40,
@@ -275,7 +359,7 @@ class Viewstock extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              '644.56',
+                              widget.balance.toString(),
                               style: TextStyle(
                                 color: themecolor.onPrimary,
                                 fontSize: 16,
@@ -286,7 +370,7 @@ class Viewstock extends StatelessWidget {
                           ],
                         ),
                         const Spacer(),
-                        const Row(
+                        Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Expanded(
@@ -296,19 +380,32 @@ class Viewstock extends StatelessWidget {
                                 children: [
                                   Pricetile(
                                     mykey: 'Open',
-                                    value: '319',
+                                    value: _stockData?.open != null
+                                        ? _stockData!.open.toString()
+                                        : '-',
                                   ),
-                                  Pricetile(mykey: 'Low', value: '319.27'),
-                                  Pricetile(mykey: 'High', value: '644.56'),
-                                  Pricetile(mykey: 'P/E', value: '1,000,000'),
+                                  Pricetile(
+                                    mykey: 'Low',
+                                    value: _stockData?.low != null
+                                        ? _stockData!.open.toString()
+                                        : '-',
+                                  ),
+                                  Pricetile(
+                                    mykey: 'High',
+                                    value: _stockData?.high != null
+                                        ? _stockData!.open.toString()
+                                        : '-',
+                                  ),
+                                  const Pricetile(
+                                      mykey: 'P/E', value: '1,000,000'),
                                 ],
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 40,
                             ),
                             //////////////////////
-                            Expanded(
+                            const Expanded(
                               child: Column(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -378,23 +475,34 @@ class Viewstock extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
-                        child: Container(
-                          width: double.infinity,
-                          height: double.infinity,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(32),
-                            color: themecolor.primaryContainer,
-                          ),
-                          child: Center(
-                              child: Text(
-                            'Sell',
-                            style: TextStyle(
-                              color: themecolor.onPrimary,
-                              fontSize: 16,
-                              fontFamily: 'Gilroy',
-                              fontWeight: FontWeight.w600,
+                        child: GestureDetector(
+                          onTap: () =>
+                              Navigator.of(context).push(MaterialPageRoute(
+                            builder: (BuildContext context) => Transactionpage(
+                              symbol: widget.symbol!,
+                              name: widget.name!,
+                              price: widget.balance,
+                              isbuy: false,
                             ),
                           )),
+                          child: Container(
+                            width: double.infinity,
+                            height: double.infinity,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(32),
+                              color: themecolor.primaryContainer,
+                            ),
+                            child: Center(
+                                child: Text(
+                              'Sell',
+                              style: TextStyle(
+                                color: themecolor.onPrimary,
+                                fontSize: 16,
+                                fontFamily: 'Gilroy',
+                                fontWeight: FontWeight.w600,
+                              ),
+                            )),
+                          ),
                         ),
                       ),
                       const SizedBox(
@@ -405,9 +513,10 @@ class Viewstock extends StatelessWidget {
                           onTap: () =>
                               Navigator.of(context).push(MaterialPageRoute(
                             builder: (BuildContext context) => Transactionpage(
-                              symbol: symbol!,
-                              name: name!,
-                              price: balance,
+                              symbol: widget.symbol!,
+                              name: widget.name!,
+                              price: widget.balance,
+                              isbuy: true,
                             ),
                           )),
                           child: Container(

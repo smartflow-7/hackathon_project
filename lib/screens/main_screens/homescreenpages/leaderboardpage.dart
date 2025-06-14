@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hackathon_project/Widgets/apptheme.dart';
+import 'package:hackathon_project/Widgets/litletile.dart';
 import 'package:hackathon_project/Widgets/ranktile.dart';
 import 'package:hackathon_project/models/Providers/leaderboardprovider.dart';
 import 'package:hackathon_project/models/Providers/stock_provider.dart';
+import 'package:hackathon_project/models/nigerian_stocks.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:redacted/redacted.dart';
@@ -115,22 +117,37 @@ class _LeaderboardpageState extends State<Leaderboardpage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
+                  const Text(
                     'Total Assets',
                     style: TextStyle(
-                      color: themecolor.primaryContainer,
+                      color: Color(0xFF94959D),
                     ),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        value.balance.toString(),
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontFamily: 'Gilroy',
-                          fontWeight: FontWeight.w500,
-                          color: themecolor.primaryContainer,
+                      Text.rich(
+                        TextSpan(
+                          children: [
+                            TextSpan(
+                              text: '\$',
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontFamily: 'Gilroy',
+                                fontWeight: FontWeight.w800,
+                                color: themecolor.primaryContainer,
+                              ),
+                            ),
+                            TextSpan(
+                              text: value.balance.toStringAsFixed(3).toString(),
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontFamily: 'Gilroy',
+                                fontWeight: FontWeight.w800,
+                                color: themecolor.primaryContainer,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                       Text(
@@ -142,28 +159,21 @@ class _LeaderboardpageState extends State<Leaderboardpage> {
                     ],
                   ),
                   SizedBox(
-                    height: 40,
-                    child:
-                        ListView(scrollDirection: Axis.horizontal, children: [
-                      Text(
-                        '4.5%',
-                        style: TextStyle(
-                          color: themecolor.primaryContainer,
-                        ),
-                      ),
-                      Text(
-                        '4.5%',
-                        style: TextStyle(
-                          color: themecolor.primaryContainer,
-                        ),
-                      ),
-                      Text(
-                        '4.5%',
-                        style: TextStyle(
-                          color: themecolor.primaryContainer,
-                        ),
-                      ),
-                    ]),
+                    height: 58,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      shrinkWrap: true,
+                      // physics: const NeverScrollableScrollPhysics(),
+                      itemCount: nigerianStocks.length,
+                      itemBuilder: (context, index) {
+                        final nstocks = nigerianStocks[index];
+                        return LittleTile(
+                          name: nstocks.name,
+                          symbol: nstocks.symbol,
+                          percent: '%0.435',
+                        );
+                      },
+                    ),
                   ),
                   Container(
                     // width: 84,

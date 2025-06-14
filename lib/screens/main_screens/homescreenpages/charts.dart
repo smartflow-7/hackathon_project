@@ -7,9 +7,11 @@ import 'package:hackathon_project/Widgets/simplestocktile.dart';
 import 'package:hackathon_project/Widgets/stocktile.dart';
 import 'package:hackathon_project/models/Providers/chartdataprovider.dart';
 import 'package:hackathon_project/models/Providers/getallstockprovider.dart';
+import 'package:hackathon_project/models/nigerian_stocks.dart';
 import 'package:hackathon_project/screens/main_screens/Tradescreens/ViewStock.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:redacted/redacted.dart';
 
 class Charts extends StatefulWidget {
   const Charts({super.key});
@@ -64,182 +66,203 @@ class _ChartsState extends State<Charts> {
       child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
-          child: Consumer<AllStockProvider>(
-            builder: (context, stockProvider, child) {
-              if (stockProvider.isLoading) {
-                return const Center(child: CircularProgressIndicator());
-              }
-
-              if (stockProvider.error != null) {
-                return Center(child: Text('Error: ${stockProvider.error}'));
-              }
-
-              return Column(
+          child: Column(
+            children: [
+              const SizedBox(height: 25),
+              // Header Row
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const SizedBox(height: 25),
-                  // Header Row
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Markets',
-                        style: TextStyle(
-                          color: colorScheme.onPrimary,
-                          fontSize: 16,
-                          fontFamily: 'Gilroy',
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      Container(
-                        width: 48,
-                        height: 48,
-                        decoration: ShapeDecoration(
-                          shape: RoundedRectangleBorder(
-                            side: BorderSide(
-                              width: 1,
-                              color: colorScheme.onPrimary,
-                            ),
-                            borderRadius: BorderRadius.circular(24),
-                          ),
-                        ),
-                        child: Center(
-                          child: Icon(
-                            Iconsax.notification_bing,
-                            size: 20,
-                            color: colorScheme.primary,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 24),
-
-                  // Horizontal Stock Tiles
-                  SizedBox(
-                    height: 158,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: const [
-                        Stocktile(),
-                        Stocktile(),
-                        Stocktile(),
-                        Stocktile(),
-                        Stocktile(),
-                      ],
+                  Text(
+                    'Markets',
+                    style: TextStyle(
+                      color: colorScheme.onPrimary,
+                      fontSize: 16,
+                      fontFamily: 'Gilroy',
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
-                  const SizedBox(height: 40),
-
-                  // Search Field
                   Container(
-                    padding: const EdgeInsets.all(7),
+                    width: 48,
+                    height: 48,
                     decoration: ShapeDecoration(
-                      color: colorScheme.primaryContainer,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(32),
+                        side: BorderSide(
+                          width: 1,
+                          color: colorScheme.onPrimary,
+                        ),
+                        borderRadius: BorderRadius.circular(24),
                       ),
                     ),
-                    child: TextField(
-                      controller: _searchController,
-                      textAlignVertical: TextAlignVertical.center,
-                      cursorColor: Apptheme.primary,
-                      decoration: InputDecoration(
-                        contentPadding: const EdgeInsets.only(left: 10),
-                        border: InputBorder.none,
-                        prefixIcon: const Icon(
-                          Iconsax.search_normal_1_copy,
-                          color: Apptheme.lightgrey,
-                        ),
-                        suffixIcon: IconButton(
-                          icon: const Icon(
-                            Iconsax.setting_4_copy,
-                            color: Apptheme.lightgrey,
-                            size: 20,
+                    child: Center(
+                      child: Icon(
+                        Iconsax.notification_bing,
+                        size: 20,
+                        color: colorScheme.primary,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 24),
+
+              // Horizontal Stock Tiles
+              SizedBox(
+                height: 158,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  shrinkWrap: true,
+                  // physics: const NeverScrollableScrollPhysics(),
+                  itemCount: nigerianStocks.length,
+                  itemBuilder: (context, index) {
+                    final nstocks = nigerianStocks[index];
+                    return Stocktile(
+                      name: nstocks.name,
+                      price: nstocks.price,
+                      symbol: nstocks.symbol,
+                      sector: nstocks.sector,
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: 40),
+              Consumer<AllStockProvider>(
+                builder: (context, stockProvider, child) {
+                  if (stockProvider.isLoading) {
+                    return Column(
+                      children: List.generate(
+                          8,
+                          (index) => Padding(
+                                padding: const EdgeInsets.only(bottom: 14.0),
+                                child: const Simplestocktile(
+                                  currentprice: '2223',
+                                  symbol: '2222',
+                                  name: 'fadadadada',
+                                ).redacted(context: context, redact: true),
+                              )),
+                    );
+                  }
+
+                  if (stockProvider.error != null) {
+                    return Center(child: Text('Error: ${stockProvider.error}'));
+                  }
+
+                  return Column(
+                    children: [
+                      // Search Field
+                      Container(
+                        padding: const EdgeInsets.all(7),
+                        decoration: ShapeDecoration(
+                          color: colorScheme.primaryContainer,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(32),
                           ),
-                          onPressed: () {
-                            stockProvider.filterStocks(
-                                searchQuery: _searchController.text);
+                        ),
+                        child: TextField(
+                          controller: _searchController,
+                          textAlignVertical: TextAlignVertical.center,
+                          cursorColor: Apptheme.primary,
+                          decoration: InputDecoration(
+                            contentPadding: const EdgeInsets.only(left: 10),
+                            border: InputBorder.none,
+                            prefixIcon: const Icon(
+                              Iconsax.search_normal_1_copy,
+                              color: Apptheme.lightgrey,
+                            ),
+                            suffixIcon: IconButton(
+                              icon: const Icon(
+                                Iconsax.setting_4_copy,
+                                color: Apptheme.lightgrey,
+                                size: 20,
+                              ),
+                              onPressed: () {
+                                stockProvider.filterStocks(
+                                    searchQuery: _searchController.text);
+                              },
+                            ),
+                            hintText: 'Search stocks...',
+                            hintStyle: TextStyle(
+                              color: colorScheme.onPrimaryContainer,
+                              fontSize: 16,
+                              fontFamily: 'Gilroy',
+                              fontWeight: FontWeight.w500,
+                              height: 1.50,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 40),
+
+                      // Market Movers Header
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Market movers',
+                            style: theme.textTheme.headlineSmall?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () {},
+                            icon: const Icon(
+                              Icons.arrow_forward_sharp,
+                              size: 24,
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      // Stock List
+                      if (stockProvider.filteredStocks == null ||
+                          stockProvider.filteredStocks!.isEmpty)
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 40),
+                          child: Text('No stocks found'),
+                        )
+                      else
+                        ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: 50,
+                          itemBuilder: (context, index) {
+                            final stock = stockProvider.filteredStocks![index];
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 20.0),
+                              child: InkWell(
+                                splashColor:
+                                    const Color.fromARGB(134, 158, 158, 158),
+                                onTap: () {
+                                  // CHART.changeSymbol(stock.symbol!);
+
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        Viewstock(
+                                      balance: stock.price!,
+                                      name: stock.name,
+                                      exchange: stock.exchange,
+                                      symbol: stock.symbol,
+                                    ),
+                                  ));
+                                },
+                                child: Ink(
+                                  child: Simplestocktile(
+                                    currentprice:
+                                        stock.price?.toStringAsFixed(2) ??
+                                            'N/A',
+                                    name: stock.name ?? 'Unknown',
+                                    symbol: stock.symbol ?? 'N/A',
+                                  ),
+                                ),
+                              ),
+                            );
                           },
                         ),
-                        hintText: 'Search stocks...',
-                        hintStyle: TextStyle(
-                          color: colorScheme.onPrimaryContainer,
-                          fontSize: 16,
-                          fontFamily: 'Gilroy',
-                          fontWeight: FontWeight.w500,
-                          height: 1.50,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 40),
-
-                  // Market Movers Header
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Market movers',
-                        style: theme.textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(
-                          Icons.arrow_forward_sharp,
-                          size: 24,
-                        ),
-                      ),
                     ],
-                  ),
-
-                  // Stock List
-                  if (stockProvider.filteredStocks == null ||
-                      stockProvider.filteredStocks!.isEmpty)
-                    const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 40),
-                      child: Text('No stocks found'),
-                    )
-                  else
-                    ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: 50,
-                      itemBuilder: (context, index) {
-                        final stock = stockProvider.filteredStocks![index];
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 20.0),
-                          child: InkWell(
-                            splashColor:
-                                const Color.fromARGB(134, 158, 158, 158),
-                            onTap: () {
-                              CHART.changeSymbol(stock.symbol!);
-
-                              Navigator.of(context).push(MaterialPageRoute(
-                                builder: (BuildContext context) => Viewstock(
-                                  balance: stock.price!,
-                                  name: stock.name,
-                                  exchange: stock.exchange,
-                                  symbol: stock.symbol,
-                                ),
-                              ));
-                            },
-                            child: Ink(
-                              child: Simplestocktile(
-                                currentprice:
-                                    stock.price?.toStringAsFixed(2) ?? 'N/A',
-                                name: stock.name ?? 'Unknown',
-                                symbol: stock.symbol ?? 'N/A',
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                ],
-              );
-            },
+                  );
+                },
+              ),
+            ],
           ),
         ),
       ),

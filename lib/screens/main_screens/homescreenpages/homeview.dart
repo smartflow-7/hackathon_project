@@ -13,7 +13,9 @@ import 'package:hackathon_project/models/Providers/leaderboardprovider.dart';
 import 'package:hackathon_project/models/Providers/news_service.dart';
 import 'package:hackathon_project/models/Providers/stock_provider.dart';
 import 'package:hackathon_project/models/Providers/themeprovider.dart';
+import 'package:hackathon_project/models/nigerian_stocks.dart';
 import 'package:hackathon_project/screens/main_screens/Tradescreens/ViewStock.dart';
+import 'package:hackathon_project/screens/main_screens/homescreenpages/portfoliopage.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:redacted/redacted.dart';
@@ -203,110 +205,122 @@ class _HomeviewState extends State<Homeview> {
               children: [
                 Expanded(
                   flex: 2,
-                  child: Container(
-                    height: contheight,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Apptheme.primary,
-                        width: 2,
+                  child: GestureDetector(
+                    onTap: () {
+                      // CHART.changeSymbol(stock.symbol!);
+
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            const Portfoliopage(),
+                      ));
+                    },
+                    child: Container(
+                      height: contheight,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Apptheme.primary,
+                          width: 2,
+                        ),
+                        borderRadius: BorderRadius.circular(16),
                       ),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'My Portfolio Value',
-                            style: TextStyle(
-                              color: themecolor.primary,
-                              fontSize: 12,
-                              fontFamily: 'Gilroy',
-                              fontWeight: FontWeight.w600,
+                      child: Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'My Portfolio Value',
+                              style: TextStyle(
+                                color: themecolor.primary,
+                                fontSize: 12,
+                                fontFamily: 'Gilroy',
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
-                          ),
-                          Text.rich(
-                            TextSpan(
+                            Text.rich(
+                              TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text: '₦ ',
+                                    style: TextStyle(
+                                      color: themecolor.onPrimary,
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: provider.portfolioValue
+                                        .toStringAsFixed(3)
+                                        .toString(),
+                                    style: TextStyle(
+                                      color: themecolor.onPrimary,
+                                      fontSize:
+                                          (amount != null && amount.length > 13)
+                                              ? 5
+                                              : 24,
+                                      fontWeight: FontWeight.w800,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Row(
                               children: [
-                                TextSpan(
-                                  text: '₦ ',
-                                  style: TextStyle(
-                                    color: themecolor.onPrimary,
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.w400,
+                                const Icon(Iconsax.arrow_up_1,
+                                    size: 16, color: Colors.green),
+                                const SizedBox(width: 4),
+                                Text(
+                                  provider.percentageChange.toString(),
+                                  style: const TextStyle(
+                                    color: Color(0xFF018C49),
+                                    fontSize: 12,
+                                    fontFamily: 'Gilroy',
+                                    fontWeight: FontWeight.w500,
                                   ),
                                 ),
-                                TextSpan(
-                                  text: provider.portfolioValue.toString(),
+                                const SizedBox(width: 4),
+                                const Text(
+                                  'Today',
                                   style: TextStyle(
-                                    color: themecolor.onPrimary,
-                                    fontSize:
-                                        (amount != null && amount.length > 13)
-                                            ? 13
-                                            : 24,
-                                    fontWeight: FontWeight.w800,
+                                    color: Color(0xFF018C49),
+                                    fontSize: 12,
+                                    fontFamily: 'Gilroy',
+                                    fontWeight: FontWeight.w500,
                                   ),
                                 ),
                               ],
                             ),
-                          ),
-                          Row(
-                            children: [
-                              const Icon(Iconsax.arrow_up_1,
-                                  size: 16, color: Colors.green),
-                              const SizedBox(width: 4),
-                              Text(
-                                provider.percentageChange.toString(),
-                                style: const TextStyle(
-                                  color: Color(0xFF018C49),
-                                  fontSize: 12,
-                                  fontFamily: 'Gilroy',
-                                  fontWeight: FontWeight.w500,
+                            const Spacer(),
+                            Row(
+                              children: [
+                                Deposit(themecolor: themecolor),
+                                const SizedBox(
+                                  width: 12,
                                 ),
-                              ),
-                              const SizedBox(width: 4),
-                              const Text(
-                                'Today',
-                                style: TextStyle(
-                                  color: Color(0xFF018C49),
-                                  fontSize: 12,
-                                  fontFamily: 'Gilroy',
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const Spacer(),
-                          Row(
-                            children: [
-                              Deposit(themecolor: themecolor),
-                              const SizedBox(
-                                width: 12,
-                              ),
-                              Container(
-                                width: 40,
-                                height: 40,
-                                decoration: ShapeDecoration(
-                                  shape: RoundedRectangleBorder(
-                                    side: BorderSide(
-                                      width: 1,
+                                Container(
+                                  width: 40,
+                                  height: 40,
+                                  decoration: ShapeDecoration(
+                                    shape: RoundedRectangleBorder(
+                                      side: BorderSide(
+                                        width: 1,
+                                        color: themecolor.onPrimary,
+                                      ),
+                                      borderRadius: BorderRadius.circular(24),
+                                    ),
+                                  ),
+                                  child: Center(
+                                    child: Icon(
+                                      Icons.more_vert_outlined,
+                                      size: 20,
                                       color: themecolor.onPrimary,
                                     ),
-                                    borderRadius: BorderRadius.circular(24),
                                   ),
-                                ),
-                                child: Center(
-                                  child: Icon(
-                                    Icons.more_vert_outlined,
-                                    size: 20,
-                                    color: themecolor.onPrimary,
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ],
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -479,15 +493,20 @@ class _HomeviewState extends State<Homeview> {
             ),
             SizedBox(
               height: 158,
-              child: ListView(
+              child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                children: const [
-                  Stocktile(),
-                  Stocktile(),
-                  Stocktile(),
-                  Stocktile(),
-                  Stocktile(),
-                ],
+                shrinkWrap: true,
+                // physics: const NeverScrollableScrollPhysics(),
+                itemCount: nigerianStocks.length,
+                itemBuilder: (context, index) {
+                  final nstocks = nigerianStocks[index];
+                  return Stocktile(
+                    name: nstocks.name,
+                    price: nstocks.price,
+                    symbol: nstocks.symbol,
+                    sector: nstocks.sector,
+                  );
+                },
               ),
             ),
             const SizedBox(

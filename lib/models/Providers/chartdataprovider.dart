@@ -267,28 +267,24 @@ class Chartdataprovider with ChangeNotifier {
 
 // Improved changeSymbol method
   Future<void> changeSymbol(String newSymbol) async {
-    if (newSymbol.isEmpty) return;
-
-    final cleanSymbol = newSymbol.trim().toUpperCase();
-    if (cleanSymbol == _currentSymbol) return;
+    if (newSymbol.isEmpty || newSymbol.trim().toUpperCase() == _currentSymbol) {
+      return;
+    }
 
     try {
       _setLoading(true);
       _clearError();
-      _stockDataList = []; // Clear previous data
-      notifyListeners(); // Immediate UI update
+      _currentSymbol = newSymbol.trim().toUpperCase();
+      _stockDataList = []; // Clear previous data immediately
+      notifyListeners(); // Force UI update before fetching new data
 
-      _currentSymbol = cleanSymbol;
       await fetchStockData(showLoading: false);
 
-      // Additional validation
       if (_stockDataList.isEmpty) {
-        _setError('No data available for $cleanSymbol');
+        _setError('No data available for $_currentSymbol');
       }
     } catch (e) {
-      _setError('Failed to load data for $cleanSymbol: ${e.toString()}');
-      _currentSymbol = cleanSymbol; // Still update symbol to show what failed
-      notifyListeners();
+      _setError('Failed to load data for $_currentSymbol: ${e.toString()}');
     } finally {
       _setLoading(false);
     }

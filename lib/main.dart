@@ -7,7 +7,7 @@ import 'package:hackathon_project/models/Providers/leaderboardprovider.dart';
 import 'package:hackathon_project/models/Providers/news_service.dart';
 import 'package:hackathon_project/models/Providers/stock_provider.dart';
 import 'package:hackathon_project/models/Providers/themeprovider.dart';
-import 'package:hackathon_project/screens/main_screens/Tradescreens/ViewStock.dart';
+//import 'package:hackathon_project/screens/main_screens/Tradescreens/ViewStock.dart'
 import 'package:hackathon_project/screens/splashscreen.dart';
 import 'package:hackathon_project/wrapper.dart';
 import 'package:provider/provider.dart';

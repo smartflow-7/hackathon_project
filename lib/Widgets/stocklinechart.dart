@@ -12,8 +12,10 @@ class Stocklinechart extends StatefulWidget {
   const Stocklinechart({
     super.key,
     required this.themecolor,
+    required this.symbol, // Add symbol as a parameter
   });
   final ColorScheme themecolor;
+  final String symbol;
 
   @override
   State<Stocklinechart> createState() => _StocklinechartState();
@@ -21,6 +23,16 @@ class Stocklinechart extends StatefulWidget {
 
 class _StocklinechartState extends State<Stocklinechart> {
   String currentIndex = '6M';
+
+  @override
+  void didUpdateWidget(Stocklinechart oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.symbol != widget.symbol) {
+      // Reset time range when symbol changes
+      currentIndex = '6M';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<Chartdataprovider>(builder: (context, chart, child) {

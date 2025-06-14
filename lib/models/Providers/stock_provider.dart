@@ -27,8 +27,8 @@ class StockService {
   Future<Map<String, dynamic>> searchStock(String symbol, String token) async {
     try {
       final response = await _dio.get(
-        '/stockUp/stocks/search',
-        queryParameters: {'query': symbol},
+        '/stockUp/stocks/search?query=$symbol',
+        // queryParameters: {'query': symbol},
         options: Options(headers: {'token': token}),
       );
       return response.data as Map<String, dynamic>;
@@ -129,7 +129,7 @@ class StockProvider extends ChangeNotifier {
   Timer? _refreshTimer;
   static const _refreshInterval = Duration(seconds: 5);
   Timer? _portfolioValueTimer;
-  static const _portfolioUpdateInterval = Duration(seconds: 5);
+  static const _portfolioUpdateInterval = Duration(seconds: 60);
   double _cachedPortfolioValue = 0.0;
   double _cachedPortfolioChange = 0.0;
 
@@ -192,17 +192,11 @@ class StockProvider extends ChangeNotifier {
   }
 
   // =============== Stock Operations ===============
-  Future<bool> buyStock({
+  Future<Map<String, dynamic>> buyStock({
     required String symbol,
     required int quantity,
     required String token,
   }) async {
-    if (quantity <= 0) {
-      error = 'Invalid quantity';
-      notifyListeners();
-      return false;
-    }
-
     _setLoading(true);
     try {
       final response = await _stockService.buyStock(
@@ -213,36 +207,28 @@ class StockProvider extends ChangeNotifier {
 
       if (response['success'] == true) {
         await refreshPortfolio(token);
-        return true;
+        return {
+          'success': true,
+          'message': response['message'] ?? 'Buy successful'
+        };
       } else {
-        error = response['message'];
-        return false;
+        return {
+          'success': false,
+          'message': response['message'] ?? 'Buy failed'
+        };
       }
     } catch (e) {
-      error = e.toString();
-      return false;
+      return {'success': false, 'message': e.toString()};
     } finally {
       _setLoading(false);
     }
   }
 
-  Future<bool> sellStock({
+  Future<Map<String, dynamic>> sellStock({
     required String symbol,
     required int quantity,
     required String token,
   }) async {
-    if (quantity <= 0) {
-      error = 'Invalid quantity';
-      notifyListeners();
-      return false;
-    }
-
-    if (getHoldings(symbol) < quantity) {
-      error = 'Not enough shares to sell';
-      notifyListeners();
-      return false;
-    }
-
     _setLoading(true);
     try {
       final response = await _stockService.sellStock(
@@ -253,14 +239,18 @@ class StockProvider extends ChangeNotifier {
 
       if (response['success'] == true) {
         await refreshPortfolio(token);
-        return true;
+        return {
+          'success': true,
+          'message': response['message'] ?? 'Sell successful'
+        };
       } else {
-        error = response['message'];
-        return false;
+        return {
+          'success': false,
+          'message': response['message'] ?? 'Sell failed'
+        };
       }
     } catch (e) {
-      error = e.toString();
-      return false;
+      return {'success': false, 'message': e.toString()};
     } finally {
       _setLoading(false);
     }
@@ -271,6 +261,7 @@ class StockProvider extends ChangeNotifier {
 
     final upperQuery = query.toUpperCase();
 
+    // Check cache first
     if (stockCache.containsKey(upperQuery)) {
       return stockCache[upperQuery];
     }
@@ -279,21 +270,35 @@ class StockProvider extends ChangeNotifier {
     try {
       final response = await _stockService.searchStock(upperQuery, token);
 
+      debugPrint('Search Stock Response: ${response.toString()}');
+
       if (response['success'] == true && response['data'] != null) {
+        final data = response['data'] as Map<String, dynamic>;
+
+        // Create StockData from response
         final stockData = StockData.fromJson({
-          ...response['data'],
+          ...data,
           'symbol': upperQuery,
+          'name': upperQuery, // Using symbol as name if not provided
+          'exchange': 'N/A', // Default value if not provided
+          't': DateTime.now().millisecondsSinceEpoch ~/
+              1000, // Current timestamp if not provided
         });
 
+        // Cache the result
         stockCache[upperQuery] = stockData;
         notifyListeners();
+
         return stockData;
       } else {
         error = response['message'] ?? 'Stock not found';
+        notifyListeners();
         return null;
       }
     } catch (e) {
-      error = e.toString();
+      debugPrint('Error in searchStock: $e');
+      error = 'Failed to fetch stock data: ${e.toString()}';
+      notifyListeners();
       return null;
     } finally {
       _setLoading(false);

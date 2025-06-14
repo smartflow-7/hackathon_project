@@ -1,12 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:hackathon_project/Widgets/simplestocktile.dart';
+import 'package:hackathon_project/models/Providers/themeprovider.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
+import 'package:provider/provider.dart';
 
 class Stocktile extends StatelessWidget {
-  const Stocktile({super.key});
+  const Stocktile(
+      {super.key,
+      required this.name,
+      required this.price,
+      required this.sector,
+      required this.symbol});
+  final String symbol;
+  final String name;
+  final double price;
+  final String sector;
 
   @override
   Widget build(BuildContext context) {
     var themecolor = Theme.of(context).colorScheme;
+    final themeProvider = Provider.of<ThemeProvider>(context);
     return Padding(
       padding: const EdgeInsets.only(right: 20.0),
       child: Container(
@@ -48,7 +62,7 @@ class Stocktile extends StatelessWidget {
                       SizedBox(
                         width: 41,
                         child: Text(
-                          'DNGTE',
+                          symbol,
                           style: TextStyle(
                             color: themecolor.onPrimary,
                             fontSize: 12,
@@ -58,9 +72,9 @@ class Stocktile extends StatelessWidget {
                         ),
                       ),
                       //    SizedBox(height: 4),
-                      const Text(
-                        'Dangote',
-                        style: TextStyle(
+                      Text(
+                        limitText(name),
+                        style: const TextStyle(
                           color: Color(0xFF94959D),
                           fontSize: 10,
                           fontFamily: 'Gilroy',
@@ -91,6 +105,7 @@ class Stocktile extends StatelessWidget {
               const Spacer(),
               //second row
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -113,17 +128,29 @@ class Stocktile extends StatelessWidget {
                           fontWeight: FontWeight.w800,
                         ),
                       ),
-                      const Text(
-                        '\$324.56',
-                        style: TextStyle(
+                      Text(
+                        '\$$price',
+                        style: const TextStyle(
                           color: Color(0xFF94959D),
                           fontSize: 12,
                           fontFamily: 'Gilroy',
                           fontWeight: FontWeight.w500,
                         ),
-                      )
+                      ),
+                      // const Spacer(),
                     ],
-                  )
+                  ),
+                  ////////////////////////////////////////////////
+                  const Spacer(),
+                  SvgPicture.asset(
+                    'lib/assets/Vector 1.svg',
+                    colorFilter: themeProvider.isDarkMode
+                        ? const ColorFilter.mode(
+                            Colors.white12, BlendMode.srcIn)
+                        : null,
+                    width: 78,
+                    height: 47,
+                  ),
                 ],
               )
             ],

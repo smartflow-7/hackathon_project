@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:hackathon_project/Widgets/simplestocktile.dart';
 import 'package:hackathon_project/models/Providers/api_service.dart';
 import 'package:hackathon_project/models/Providers/stock_provider.dart';
+import 'package:hackathon_project/screens/main_screens/Tradescreens/sucessfull.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -10,10 +13,12 @@ class Transactionpage extends StatefulWidget {
       {super.key,
       required this.name,
       required this.price,
-      required this.symbol});
+      required this.symbol,
+      required this.isbuy});
   String symbol;
   String name;
   double price;
+  bool isbuy;
 
   @override
   State<Transactionpage> createState() => _TransactionpageState();
@@ -22,6 +27,8 @@ class Transactionpage extends StatefulWidget {
 class _TransactionpageState extends State<Transactionpage> {
   final TextEditingController _controller = TextEditingController();
   double result = 0.0;
+  bool _isLoading = false;
+  String? _errorMessage;
 
   @override
   void initState() {
@@ -94,7 +101,7 @@ class _TransactionpageState extends State<Transactionpage> {
                           ),
                         ),
                         Text(
-                          'Buy Stocks',
+                          widget.isbuy ? 'Buy Stocks' : 'Sell ssStocks',
                           style: TextStyle(
                             color: themecolor.onPrimary,
                             fontSize: 16,
@@ -144,7 +151,7 @@ class _TransactionpageState extends State<Transactionpage> {
                               ),
                             ),
                             Text(
-                              widget.name,
+                              viewlimitText(widget.name),
                               style: const TextStyle(
                                 color: Color(0xFF94959D),
                                 fontSize: 16,
@@ -508,7 +515,7 @@ class _TransactionpageState extends State<Transactionpage> {
                                   ),
                                 ),
                                 Text(
-                                  value.balance.toString(),
+                                  value.balance.toStringAsFixed(3),
                                   style: TextStyle(
                                     color: themecolor.onPrimary,
                                     fontSize: 16,
@@ -549,29 +556,26 @@ class _TransactionpageState extends State<Transactionpage> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 24, vertical: 24),
-                    child: GestureDetector(
-                      onTap: () {
-                        my.buyStock(
-                          symbol: widget.symbol,
-                          quantity: int.tryParse(_controller.text) ?? 0,
-                          token: Auth.token ?? '',
-                        );
-                      },
-                      child: Container(
-                        width: double.infinity,
-                        height: double.infinity,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(32),
-                          color: themecolor.primary,
-                        ),
-                        child: Center(
-                          child: Text(
-                            'Place Order',
-                            style: TextStyle(
-                              color: themecolor.primaryContainer,
-                              fontSize: 16,
-                              fontFamily: 'Gilroy',
-                              fontWeight: FontWeight.w600,
+                    child: InkWell(
+                      splashColor: Colors.blue,
+                      onTap: _isLoading ? null : () => _executeTrade(my),
+                      child: Ink(
+                        child: Container(
+                          width: double.infinity,
+                          height: double.infinity,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(32),
+                            color: themecolor.primary,
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Place Order',
+                              style: TextStyle(
+                                color: themecolor.primaryContainer,
+                                fontSize: 16,
+                                fontFamily: 'Gilroy',
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                           ),
                         ),
@@ -579,11 +583,77 @@ class _TransactionpageState extends State<Transactionpage> {
                     ),
                   ),
                 ),
-              )
+              ),
+              ////////////////////////////////////////////////////////////////////////////////////
             ],
           ),
         );
       }),
     );
+  }
+
+  Future<void> _executeTrade(StockProvider stockProvider) async {
+    final quantity = int.tryParse(_controller.text);
+    if (quantity == null || quantity <= 0) {
+      setState(() {
+        _errorMessage = 'Please enter a valid quantity';
+        debugPrint(_errorMessage);
+      });
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    final token = await const FlutterSecureStorage().read(key: 'auth_token');
+    if (token == null) {
+      setState(() {
+        _isLoading = false;
+        _errorMessage = 'Authentication error';
+        debugPrint(_errorMessage);
+      });
+      return;
+    }
+
+    final result = widget.isbuy
+        ? await stockProvider.buyStock(
+            symbol: widget.symbol,
+            quantity: quantity,
+            token: token,
+          )
+        : await stockProvider.sellStock(
+            symbol: widget.symbol,
+            quantity: quantity,
+            token: token,
+          );
+
+    setState(() {
+      _isLoading = false;
+    });
+
+    if (result['success'] == true) {
+      // Navigate to success screen or previous screen
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Sucessfull(
+            symbol: widget.symbol,
+            name: widget.name,
+          ),
+        ),
+      );
+    } else {
+      setState(() {
+        _errorMessage = result['message'];
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 }
