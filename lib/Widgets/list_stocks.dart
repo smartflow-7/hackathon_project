@@ -114,3 +114,33 @@
 //     );
 //   }
 // }
+import 'package:flutter/material.dart';
+
+void showMyDialog(BuildContext context) {
+  // final chats = Provider.of<FirestoreMessagesProvider>(context, listen: false);
+  print('tapped');
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Logout'),
+        content: const Text('Do you want to logout?.'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              // chats.dispose();
+              Navigator.of(context).pop();
+            },
+            child: const Text('OK'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text('nevermind'),
+          ),
+        ],
+      );
+    },
+  );
+}

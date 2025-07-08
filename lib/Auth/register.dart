@@ -402,12 +402,36 @@ class _RegisterState extends State<Register> {
                     onTap: () {
                       if (_passwordcontroller.text ==
                           _confirmpasswordcontroller.text) {
-                        authProvider.signUp(
-                            email: _emailcontroller.text,
-                            password: passwordisvalid(_passwordcontroller.text,
-                                _confirmpasswordcontroller.text),
-                            name: _firstnamecontroller.text);
+                        try {
+                          authProvider.signUp(
+                              email: _emailcontroller.text,
+                              password: passwordisvalid(
+                                  _passwordcontroller.text,
+                                  _confirmpasswordcontroller.text),
+                              name: _firstnamecontroller.text);
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              backgroundColor: Apptheme.primary,
+                              content: Text(
+                                'passwords are not the same',
+                                style: TextStyle(
+                                    color: Colors.white, fontFamily: 'Gilroy'),
+                              ),
+                            ),
+                          );
+                        }
                       } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            backgroundColor: Apptheme.primary,
+                            content: Text(
+                              'passwords are not the same',
+                              style: TextStyle(
+                                  color: Colors.white, fontFamily: 'Gilroy'),
+                            ),
+                          ),
+                        );
                         print('passwords are not the same');
                       }
                     },

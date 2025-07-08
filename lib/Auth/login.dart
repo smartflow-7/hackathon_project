@@ -233,13 +233,26 @@ class _LoginState extends State<Login> {
                         authProvider.signIn(
                             email: _emailcontroller.text,
                             password: _passwordcontroller.text);
+                        if (authProvider.token != null &&
+                            authProvider.token!.isNotEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              backgroundColor: Apptheme.primary,
+                              content: Text(
+                                'Signed in sucessfully',
+                                style: TextStyle(
+                                    color: Colors.white, fontFamily: 'Gilroy'),
+                              ),
+                            ),
+                          );
+                        }
                         // Navigator.of(context).push(
                         //   MaterialPageRoute(
                         //     builder: (BuildContext context) => const Home(),
                         //   ),
                         // );
-                        FirstTimeUserManager.resetFirstTime();
-                        themeProvider.toggleTheme();
+                        // FirstTimeUserManager.resetFirstTime();
+                        // themeProvider.toggleTheme();
                       },
                       child: Container(
                         padding: const EdgeInsets.all(26.5),

@@ -14,6 +14,7 @@ import 'package:hackathon_project/models/Providers/news_service.dart';
 import 'package:hackathon_project/models/Providers/stock_provider.dart';
 import 'package:hackathon_project/models/Providers/themeprovider.dart';
 import 'package:hackathon_project/models/nigerian_stocks.dart';
+import 'package:hackathon_project/screens/educationalcontent.dart';
 import 'package:hackathon_project/screens/main_screens/Tradescreens/ViewStock.dart';
 import 'package:hackathon_project/screens/main_screens/homescreenpages/portfoliopage.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
@@ -39,8 +40,7 @@ class _HomeviewState extends State<Homeview> {
       final token = await const FlutterSecureStorage()
           .read(key: 'auth_token'); // Replace with actual token
 
-      Provider.of<NewsProvider>(context, listen: false)
-          .fetchAllNews(token: token ?? '');
+      Provider.of<NewsProvider>(context, listen: false).fetchAllNews();
       Provider.of<StockProvider>(context, listen: false).initialize();
       // final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
@@ -144,10 +144,10 @@ class _HomeviewState extends State<Homeview> {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        stockProvider.buyStock(
-                            symbol: 'AEVA',
-                            quantity: 20,
-                            token: authProvider.token ?? '');
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              const Educationalcontent(),
+                        ));
                       },
                       child: Container(
                         width: 48,
@@ -257,7 +257,7 @@ class _HomeviewState extends State<Homeview> {
                                       fontSize:
                                           (amount != null && amount.length > 13)
                                               ? 5
-                                              : 24,
+                                              : width / 17.5,
                                       fontWeight: FontWeight.w800,
                                     ),
                                   ),
@@ -329,75 +329,67 @@ class _HomeviewState extends State<Homeview> {
                   width: 16,
                 ),
                 Expanded(
-                  child: GestureDetector(
-                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                      builder: (BuildContext context) => Viewstock(
-                        balance: 200,
-                      ),
-                    )),
-                    child: Container(
-                      height: contheight,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16),
-                        color: Apptheme.tigerlight,
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Column(
-                          children: [
-                            Container(
-                              width: 40,
-                              height: 40,
-                              decoration: ShapeDecoration(
-                                color: Apptheme.tigerdark,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(24),
+                  child: Container(
+                    height: contheight,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      color: Apptheme.tigerlight,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Column(
+                        children: [
+                          Container(
+                            width: 40,
+                            height: 40,
+                            decoration: ShapeDecoration(
+                              color: Apptheme.tigerdark,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(24),
+                              ),
+                            ),
+                            child: const Center(
+                              child: Icon(Iconsax.cup,
+                                  size: 20, color: Colors.white),
+                            ),
+                          ),
+                          const Spacer(),
+                          Text.rich(
+                            TextSpan(
+                              children: [
+                                const TextSpan(
+                                  text: '#',
+                                  style: TextStyle(
+                                    color: Color(0xFFFC6A03),
+                                    fontSize: 20,
+                                    fontFamily: 'Gilroy',
+                                    fontWeight: FontWeight.w400,
+                                  ),
                                 ),
-                              ),
-                              child: const Center(
-                                child: Icon(Iconsax.cup,
-                                    size: 20, color: Colors.white),
-                              ),
-                            ),
-                            const Spacer(),
-                            Text.rich(
-                              TextSpan(
-                                children: [
-                                  const TextSpan(
-                                    text: '#',
-                                    style: TextStyle(
-                                      color: Color(0xFFFC6A03),
-                                      fontSize: 20,
-                                      fontFamily: 'Gilroy',
-                                      fontWeight: FontWeight.w400,
-                                    ),
+                                TextSpan(
+                                  text: getRankWithSuffix(leaderProvider.rank),
+                                  style: const TextStyle(
+                                    color: Color(0xFFFC6A03),
+                                    fontSize: 20,
+                                    fontFamily: 'Gilroy',
+                                    fontWeight: FontWeight.w800,
                                   ),
-                                  TextSpan(
-                                    text:
-                                        getRankWithSuffix(leaderProvider.rank),
-                                    style: const TextStyle(
-                                      color: Color(0xFFFC6A03),
-                                      fontSize: 20,
-                                      fontFamily: 'Gilroy',
-                                      fontWeight: FontWeight.w800,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              textAlign: TextAlign.center,
+                                ),
+                              ],
                             ),
-                            const Text(
-                              'Keep it up!',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: Color(0xFF03050B),
-                                fontSize: 12,
-                                fontFamily: 'Gilroy',
-                                fontWeight: FontWeight.w500,
-                              ),
-                            )
-                          ],
-                        ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const Text(
+                            'Keep it up!',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Color(0xFF03050B),
+                              fontSize: 12,
+                              fontFamily: 'Gilroy',
+                              fontWeight: FontWeight.w500,
+                            ),
+                          )
+                        ],
                       ),
                     ),
                   ),
@@ -441,8 +433,7 @@ class _HomeviewState extends State<Homeview> {
                       children: [
                         Text('Error: ${newsProvider.errorMessage}'),
                         ElevatedButton(
-                          onPressed: () => newsProvider.fetchAllNews(
-                              token: 'your_token_here'),
+                          onPressed: () => newsProvider.fetchAllNews(),
                           child: const Text('Retry'),
                         ),
                       ],

@@ -6,10 +6,12 @@ class Simplestocktile extends StatelessWidget {
       {super.key,
       required this.currentprice,
       required this.name,
-      required this.symbol});
+      required this.symbol,
+      this.units});
   final String name;
   final String symbol;
   final String currentprice;
+  final int? units;
 
   @override
   Widget build(BuildContext context) {
@@ -74,13 +76,14 @@ class Simplestocktile extends StatelessWidget {
                 ),
                 //    SizedBox(height: 4),
                 // Spacer(),
-                const Row(
+                Row(
                   children: [
-                    Icon(Iconsax.arrow_up_1, size: 16, color: Colors.green),
-                    SizedBox(width: 4),
+                    const Icon(Iconsax.arrow_up_1,
+                        size: 16, color: Colors.green),
+                    const SizedBox(width: 4),
                     Text(
-                      '4.32%',
-                      style: TextStyle(
+                      units != null ? units.toString() : '4.32%',
+                      style: const TextStyle(
                         color: Color(0xFF018C49),
                         fontSize: 12,
                         fontFamily: 'Gilroy',

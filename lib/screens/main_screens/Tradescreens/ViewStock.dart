@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:jwt_decoder/jwt_decoder.dart'; // Add this import
 import 'package:hackathon_project/Widgets/Time_buttons.dart';
 import 'package:hackathon_project/Widgets/simplestocktile.dart';
 import 'package:hackathon_project/Widgets/stocklinechart.dart';
+import 'package:hackathon_project/models/Providers/Ai_model.dart';
 import 'package:hackathon_project/models/Providers/api_service.dart';
 import 'package:hackathon_project/models/Providers/chartdataprovider.dart';
+import 'package:hackathon_project/models/Providers/leaderboardprovider.dart';
 import 'package:hackathon_project/models/Providers/stock_provider.dart';
 import 'package:hackathon_project/models/stock_model.dart';
 import 'package:hackathon_project/screens/main_screens/Tradescreens/Transactionpage.dart';
@@ -33,11 +36,48 @@ class _ViewstockState extends State<Viewstock> {
   StockData? _stockData;
   bool _isLoading = false;
   String? _error;
+  String? userId; // Store the decoded user ID
 
   @override
   void initState() {
     super.initState();
-    _loadStockData(); // Automatically load data when screen opens
+    _initializeData();
+  }
+
+  Future<void> _initializeData() async {
+    await _extractUserIdFromToken();
+    await _loadStockData();
+    _fetchAISuggestion();
+  }
+
+  Future<void> _extractUserIdFromToken() async {
+    try {
+      final token = await const FlutterSecureStorage().read(key: 'auth_token');
+      if (token != null) {
+        // Decode the JWT token
+        Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
+
+        // Extract user ID - adjust the key based on your JWT structure
+        // Common keys are: 'id', 'userId', 'user_id', 'sub', etc.
+        userId = decodedToken['id']?.toString() ??
+            decodedToken['userId']?.toString() ??
+            decodedToken['user_id']?.toString() ??
+            decodedToken['sub']?.toString();
+
+        print('Extracted User ID: $userId');
+      }
+    } catch (e) {
+      print('Error decoding JWT token: $e');
+    }
+  }
+
+  void _fetchAISuggestion() {
+    if (userId != null && widget.symbol != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Provider.of<AISuggestionProvider>(context, listen: false)
+            .fetchSuggestion(userId: userId!, symbol: widget.symbol!);
+      });
+    }
   }
 
   Future<void> _loadStockData() async {
@@ -80,8 +120,7 @@ class _ViewstockState extends State<Viewstock> {
       setState(() {
         _stockData = stockData;
         _isLoading = false;
-        print('object');
-        print(_stockData);
+        print('Stock data loaded: $_stockData');
       });
     } catch (e) {
       setState(() {
@@ -94,6 +133,7 @@ class _ViewstockState extends State<Viewstock> {
   @override
   Widget build(BuildContext context) {
     final stockProvider = Provider.of<StockProvider>(context, listen: true);
+    final ai = Provider.of<AISuggestionProvider>(context, listen: true);
     final auth = Provider.of<AuthProvider>(context, listen: true);
     final token = auth.token;
 
@@ -101,10 +141,19 @@ class _ViewstockState extends State<Viewstock> {
     final double height = size.height;
     final double boxheight = height / 8.5;
     var themecolor = Theme.of(context).colorScheme;
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: themecolor.surface,
-      floatingActionButton: FloatingActionButton(onPressed: () {}),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Refresh AI suggestion with current user ID and symbol
+          if (userId != null && widget.symbol != null) {
+            ai.refreshSuggestion(userId: userId!, symbol: widget.symbol!);
+          }
+        },
+        child: const Icon(Icons.refresh),
+      ),
       body: SafeArea(
         child: Stack(
           children: [
@@ -112,14 +161,11 @@ class _ViewstockState extends State<Viewstock> {
               padding: const EdgeInsets.symmetric(horizontal: 24.0),
               child: ListView(
                 children: [
-                  const SizedBox(
-                    height: 25,
-                  ),
+                  const SizedBox(height: 25),
                   Row(
                     children: [
                       GestureDetector(
                         onTap: () {
-                          // Handle tap event
                           Navigator.pop(context);
                         },
                         child: Container(
@@ -140,9 +186,7 @@ class _ViewstockState extends State<Viewstock> {
                           ),
                         ),
                       ),
-                      const SizedBox(
-                        width: 24,
-                      ),
+                      const SizedBox(width: 24),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -180,8 +224,32 @@ class _ViewstockState extends State<Viewstock> {
                           ),
                         ),
                         child: Center(
-                          child: Icon(Iconsax.send_2_copy,
-                              size: 20, color: themecolor.onPrimary),
+                          child: GestureDetector(
+                            onTap: () {
+                              if (ai.hasData && ai.suggestion != null) {
+                                showStockDialog(
+                                  context,
+                                  widget.symbol!,
+                                  ai.suggestion!
+                                      .suggestion, // Use the AI suggestion text
+                                );
+                              } else if (ai.isLoading) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content:
+                                          Text('Loading AI suggestion...')),
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content:
+                                          Text('No AI suggestion available')),
+                                );
+                              }
+                            },
+                            child: Icon(Iconsax.bubble_copy,
+                                size: 20, color: themecolor.onPrimary),
+                          ),
                         ),
                       ),
                       const SizedBox(width: 16),
@@ -204,16 +272,121 @@ class _ViewstockState extends State<Viewstock> {
                       ),
                     ],
                   ),
-                  const SizedBox(
-                    height: 24,
-                  ),
+                  const SizedBox(height: 24),
+
+                  // Add AI Suggestion Display Section
+                  if (ai.hasData && ai.suggestion != null)
+                    Container(
+                      margin: const EdgeInsets.only(bottom: 24),
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: themecolor.primaryContainer.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: themecolor.primary.withOpacity(0.3),
+                          width: 1,
+                        ),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.psychology,
+                                color: themecolor.primary,
+                                size: 20,
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                'AI Suggestion',
+                                style: TextStyle(
+                                  color: themecolor.primary,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            ai.suggestion!.suggestion,
+                            style: TextStyle(
+                              color: themecolor.onPrimary,
+                              fontSize: 14,
+                              fontFamily: 'Gilroy',
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Trades: ${ai.suggestion!.userSummary.trades}',
+                                style: const TextStyle(
+                                  color: Color(0xFF94959D),
+                                  fontSize: 12,
+                                ),
+                              ),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 4,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: themecolor.primary.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Text(
+                                  ai.suggestion!.userSummary.badge,
+                                  style: TextStyle(
+                                    color: themecolor.primary,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+
+                  if (ai.isLoading)
+                    Container(
+                      margin: const EdgeInsets.only(bottom: 24),
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: themecolor.primaryContainer.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        children: [
+                          const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          ),
+                          const SizedBox(width: 12),
+                          Text(
+                            'Getting AI suggestion...',
+                            style: TextStyle(
+                              color: themecolor.onPrimary,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                  // Rest of your existing UI...
                   Row(
                     children: [
                       Column(
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        //spacing: 12,
                         children: [
                           Text(
                             '\$${widget.balance}',
@@ -228,7 +401,6 @@ class _ViewstockState extends State<Viewstock> {
                             mainAxisSize: MainAxisSize.min,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.center,
-                            // spacing: 4,
                             children: [
                               const SizedBox(
                                   width: 16, height: 16, child: Stack()),
@@ -245,9 +417,7 @@ class _ViewstockState extends State<Viewstock> {
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
-                              const SizedBox(
-                                width: 8,
-                              ),
+                              const SizedBox(width: 8),
                               Text(
                                 (_stockData?.changePercent != null
                                     ? '${_stockData!.changePercent}%'
@@ -281,7 +451,6 @@ class _ViewstockState extends State<Viewstock> {
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.end,
-                        // spacing: 12,
                         children: [
                           Text(
                             'Nasdaq',
@@ -316,20 +485,16 @@ class _ViewstockState extends State<Viewstock> {
                       )
                     ],
                   ),
-                  const SizedBox(
-                    height: 40,
-                  ),
+                  const SizedBox(height: 40),
 
-                  ////////////////////////////////////////////////////
-                  // Stocklinechart(themecolor: themecolor),
+                  // Continue with rest of your existing widgets...
                   Stocklinechart(
                     themecolor: themecolor,
                     symbol: widget.symbol!,
                   ),
-                  ////////////////////////////////////////
-                  const SizedBox(
-                    height: 40,
-                  ),
+                  const SizedBox(height: 40),
+
+                  // Overview Container and other existing widgets...
                   Container(
                     height: 200,
                     padding: const EdgeInsets.all(20),
@@ -345,7 +510,6 @@ class _ViewstockState extends State<Viewstock> {
                     ),
                     child: Column(
                       children: [
-                        //first row
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -387,13 +551,13 @@ class _ViewstockState extends State<Viewstock> {
                                   Pricetile(
                                     mykey: 'Low',
                                     value: _stockData?.low != null
-                                        ? _stockData!.open.toString()
+                                        ? _stockData!.low.toString()
                                         : '-',
                                   ),
                                   Pricetile(
                                     mykey: 'High',
                                     value: _stockData?.high != null
-                                        ? _stockData!.open.toString()
+                                        ? _stockData!.high.toString()
                                         : '-',
                                   ),
                                   const Pricetile(
@@ -401,10 +565,7 @@ class _ViewstockState extends State<Viewstock> {
                                 ],
                               ),
                             ),
-                            const SizedBox(
-                              width: 40,
-                            ),
-                            //////////////////////
+                            const SizedBox(width: 40),
                             const Expanded(
                               child: Column(
                                 mainAxisAlignment:
@@ -423,9 +584,7 @@ class _ViewstockState extends State<Viewstock> {
                       ],
                     ),
                   ),
-                  const SizedBox(
-                    height: 40,
-                  ),
+                  const SizedBox(height: 40),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -444,13 +603,11 @@ class _ViewstockState extends State<Viewstock> {
                           ))
                     ],
                   ),
-                  const SizedBox(
-                    height: 200,
-                  ),
+                  const SizedBox(height: 200),
                 ],
               ),
             ),
-            //bottom button (buy and sell )
+            // Bottom buy/sell buttons
             Align(
               alignment: Alignment.bottomCenter,
               child: Container(
@@ -458,7 +615,6 @@ class _ViewstockState extends State<Viewstock> {
                 height: boxheight,
                 decoration: BoxDecoration(
                   color: themecolor.surface,
-                  // borderRadius: BorderRadius.circular(100),
                   boxShadow: const [
                     BoxShadow(
                       color: Color.fromARGB(111, 187, 187, 187),
@@ -505,9 +661,7 @@ class _ViewstockState extends State<Viewstock> {
                           ),
                         ),
                       ),
-                      const SizedBox(
-                        width: 16,
-                      ),
+                      const SizedBox(width: 16),
                       Expanded(
                         child: GestureDetector(
                           onTap: () =>
@@ -551,6 +705,7 @@ class _ViewstockState extends State<Viewstock> {
   }
 }
 
+// Rest of your existing classes remain the same...
 class Pricetile extends StatelessWidget {
   const Pricetile({
     super.key,
@@ -590,4 +745,30 @@ class Pricetile extends StatelessWidget {
       ),
     );
   }
+}
+
+void showStockDialog(BuildContext context, String symbol, String description) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text(symbol),
+        content: Text(description),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text('Close'),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+// Add this helper function if it doesn't exist
+String viewlimitText(String text) {
+  if (text.length <= 20) return text;
+  return '${text.substring(0, 20)}...';
 }

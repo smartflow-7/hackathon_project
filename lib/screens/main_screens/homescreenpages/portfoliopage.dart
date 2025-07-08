@@ -347,6 +347,7 @@ class Portfoliopage extends StatelessWidget {
                             currentprice: stock.buyPrice.toStringAsFixed(3),
                             name: stock.symbol ?? 'Unknown',
                             symbol: stock.symbol ?? 'N/A',
+                            units: stock.quantity,
                           ),
                         ),
                       ),

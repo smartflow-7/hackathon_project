@@ -21,8 +21,7 @@ class _NewsState extends State<News> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final token = await const FlutterSecureStorage()
           .read(key: 'auth_token'); // Replace with actual token
-      Provider.of<NewsProvider>(context, listen: false)
-          .fetchAllNews(token: token ?? '');
+      Provider.of<NewsProvider>(context, listen: false).fetchAllNews();
     });
   }
 
@@ -234,8 +233,7 @@ class _NewsState extends State<News> {
                         children: [
                           Text('Error: ${newsProvider.errorMessage}'),
                           ElevatedButton(
-                            onPressed: () => newsProvider.fetchAllNews(
-                                token: 'your_token_here'),
+                            onPressed: () => newsProvider.fetchAllNews(),
                             child: const Text('Retry'),
                           ),
                         ],

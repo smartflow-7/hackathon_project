@@ -1,11 +1,15 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:hackathon_project/Widgets/apptheme.dart';
 import 'package:hackathon_project/Widgets/simplestocktile.dart';
 import 'package:hackathon_project/models/Providers/api_service.dart';
 import 'package:hackathon_project/models/Providers/stock_provider.dart';
 import 'package:hackathon_project/screens/main_screens/Tradescreens/sucessfull.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
+import 'package:overlay_kit/overlay_kit.dart';
 import 'package:provider/provider.dart';
 
 class Transactionpage extends StatefulWidget {
@@ -592,68 +596,115 @@ class _TransactionpageState extends State<Transactionpage> {
     );
   }
 
+  // Alternative approach using showDialog for loading
   Future<void> _executeTrade(StockProvider stockProvider) async {
     final quantity = int.tryParse(_controller.text);
     if (quantity == null || quantity <= 0) {
       setState(() {
         _errorMessage = 'Please enter a valid quantity';
-        debugPrint(_errorMessage);
       });
+      debugPrint(_errorMessage);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Apptheme.primary,
+          content: Text(
+            _errorMessage!,
+            style: const TextStyle(color: Colors.white, fontFamily: 'Gilroy'),
+          ),
+        ),
+      );
       return;
     }
+
+    // Show loading dialog
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return const Center(
+          child: CircularProgressIndicator(
+            color: Apptheme.primary,
+          ),
+        );
+      },
+    );
 
     setState(() {
       _isLoading = true;
       _errorMessage = null;
     });
 
-    final token = await const FlutterSecureStorage().read(key: 'auth_token');
-    if (token == null) {
-      setState(() {
-        _isLoading = false;
-        _errorMessage = 'Authentication error';
+    try {
+      final token = await const FlutterSecureStorage().read(key: 'auth_token');
+      if (token == null) {
+        Navigator.of(context).pop(); // Close loading dialog
+        setState(() {
+          _isLoading = false;
+          _errorMessage = 'Authentication error';
+        });
         debugPrint(_errorMessage);
-      });
-      return;
-    }
+        return;
+      }
 
-    final result = widget.isbuy
-        ? await stockProvider.buyStock(
-            symbol: widget.symbol,
-            quantity: quantity,
-            token: token,
-          )
-        : await stockProvider.sellStock(
-            symbol: widget.symbol,
-            quantity: quantity,
-            token: token,
-          );
+      final result = widget.isbuy
+          ? await stockProvider.buyStock(
+              symbol: widget.symbol,
+              quantity: quantity,
+              token: token,
+            )
+          : await stockProvider.sellStock(
+              symbol: widget.symbol,
+              quantity: quantity,
+              token: token,
+            );
 
-    setState(() {
-      _isLoading = false;
-    });
+      Navigator.of(context).pop(); // Close loading dialog
 
-    if (result['success'] == true) {
-      // Navigate to success screen or previous screen
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => Sucessfull(
-            symbol: widget.symbol,
-            name: widget.name,
+      if (result['success'] == true) {
+        // Navigate to success screen
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Sucessfull(
+              symbol: widget.symbol,
+              name: widget.name,
+            ),
+          ),
+        );
+      } else {
+        // Show error message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.red,
+            content: Text(
+              result['message'] ?? 'Transaction failed',
+              style: const TextStyle(color: Colors.white),
+            ),
+          ),
+        );
+        setState(() {
+          _errorMessage = result['message'];
+        });
+      }
+    } catch (e) {
+      Navigator.of(context).pop(); // Close loading dialog
+      debugPrint('Error during trade execution: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          backgroundColor: Colors.red,
+          content: Text(
+            'An error occurred during the transaction',
+            style: TextStyle(color: Colors.white),
           ),
         ),
       );
-    } else {
       setState(() {
-        _errorMessage = result['message'];
+        _errorMessage = 'An error occurred during the transaction';
+      });
+    } finally {
+      setState(() {
+        _isLoading = false;
       });
     }
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
   }
 }

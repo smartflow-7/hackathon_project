@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:redacted/redacted.dart';
 
@@ -30,20 +31,28 @@ class Newstile extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                width: 80,
-                height: 80,
-                clipBehavior: Clip.antiAlias,
-                decoration: ShapeDecoration(
-                  image: isLoading
-                      ? null
-                      : DecorationImage(
-                          image: NetworkImage(image),
-                          fit: BoxFit.cover,
-                        ),
-                  color: isLoading ? Colors.grey[300] : null,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(11),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(11),
+                child: CachedNetworkImage(
+                  width: 80,
+                  height: 80,
+                  imageUrl: image,
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) => Container(
+                    width: 80,
+                    height: 80,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(11),
+                    ),
+                  ).redacted(context: context, redact: true),
+                  errorWidget: (context, url, error) => Container(
+                    width: 80,
+                    height: 80,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(11),
+                    ),
                   ),
                 ),
               ).redacted(

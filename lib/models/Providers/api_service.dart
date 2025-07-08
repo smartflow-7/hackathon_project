@@ -192,7 +192,9 @@ class AuthProvider extends ChangeNotifier {
         debugPrint('Auth token: $token');
       } catch (e) {
         _setLoading(false);
+
         debugPrint('Sign up error: $e');
+
         rethrow;
       }
     } else {

@@ -224,7 +224,7 @@ class _ChartsState extends State<Charts> {
                         ListView.builder(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
-                          itemCount: 50,
+                          itemCount: 100,
                           itemBuilder: (context, index) {
                             final stock = stockProvider.filteredStocks![index];
                             return Padding(
@@ -262,6 +262,9 @@ class _ChartsState extends State<Charts> {
                   );
                 },
               ),
+              const SizedBox(
+                height: 600,
+              )
             ],
           ),
         ),

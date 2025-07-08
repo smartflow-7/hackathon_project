@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hackathon_project/models/Providers/Ai_model.dart';
 import 'package:hackathon_project/models/Providers/api_service.dart';
 import 'package:hackathon_project/models/Providers/chartdataprovider.dart';
 import 'package:hackathon_project/models/Providers/getallstockprovider.dart';
@@ -24,6 +25,10 @@ void main() async {
     providers: [
       ChangeNotifierProvider(
         create: (_) => LeaderboardProvider()..initialize(),
+        child: const Wrapper(),
+      ),
+      ChangeNotifierProvider(
+        create: (_) => AISuggestionProvider(),
         child: const Wrapper(),
       ),
       ChangeNotifierProvider(

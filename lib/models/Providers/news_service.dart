@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hackathon_project/models/stock_news.dart';
 
 class NewsService {
@@ -63,6 +64,8 @@ class NewsProvider extends ChangeNotifier {
   Stocknews? _allNews;
   bool _isLoading = false;
   String? _errorMessage;
+  String token =
+      const FlutterSecureStorage().read(key: 'auth_token').toString();
 
   // Getters
   Stocknews? get allNews => _allNews;
@@ -70,6 +73,7 @@ class NewsProvider extends ChangeNotifier {
   String? get errorMessage => _errorMessage;
   bool get hasError => _errorMessage != null;
   bool get hasData => _allNews != null;
+  //String? get token => _token;
 
   // Clear error message
   void clearError() {
@@ -78,8 +82,7 @@ class NewsProvider extends ChangeNotifier {
   }
 
   // Fetch all stock news
-  Future<void> fetchAllNews(
-      {required String token, bool refresh = false}) async {
+  Future<void> fetchAllNews({bool refresh = false}) async {
     // Don't fetch if already loading or data exists and not refreshing
     if (_isLoading || (_allNews != null && !refresh)) return;
 
@@ -101,7 +104,7 @@ class NewsProvider extends ChangeNotifier {
 
   // Refresh all news data
   Future<void> refreshNews({required String token}) async {
-    await fetchAllNews(token: token, refresh: true);
+    await fetchAllNews(refresh: true);
   }
 
   // Clear all cached data
