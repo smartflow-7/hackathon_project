@@ -1,20 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:jwt_decoder/jwt_decoder.dart'; // Add this import
-import 'package:hackathon_project/Widgets/Time_buttons.dart';
-import 'package:hackathon_project/Widgets/simplestocktile.dart';
+
 import 'package:hackathon_project/Widgets/stocklinechart.dart';
 import 'package:hackathon_project/models/Providers/Ai_model.dart';
-import 'package:hackathon_project/models/Providers/api_service.dart';
-import 'package:hackathon_project/models/Providers/chartdataprovider.dart';
-import 'package:hackathon_project/models/Providers/leaderboardprovider.dart';
+
 import 'package:hackathon_project/models/Providers/stock_provider.dart';
 import 'package:hackathon_project/models/stock_model.dart';
 import 'package:hackathon_project/screens/main_screens/Tradescreens/Transactionpage.dart';
-import 'package:hackathon_project/screens/main_screens/homescreenpages/charts.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:redacted/redacted.dart';
 
 class Viewstock extends StatefulWidget {
   Viewstock(
@@ -64,10 +59,10 @@ class _ViewstockState extends State<Viewstock> {
             decodedToken['user_id']?.toString() ??
             decodedToken['sub']?.toString();
 
-        print('Extracted User ID: $userId');
+        //   print('Extracted User ID: $userId');
       }
     } catch (e) {
-      print('Error decoding JWT token: $e');
+      // print('Error decoding JWT token: $e');
     }
   }
 
@@ -120,7 +115,7 @@ class _ViewstockState extends State<Viewstock> {
       setState(() {
         _stockData = stockData;
         _isLoading = false;
-        print('Stock data loaded: $_stockData');
+        // print('Stock data loaded: $_stockData');
       });
     } catch (e) {
       setState(() {
@@ -132,10 +127,10 @@ class _ViewstockState extends State<Viewstock> {
 
   @override
   Widget build(BuildContext context) {
-    final stockProvider = Provider.of<StockProvider>(context, listen: true);
+    //  final stockProvider = Provider.of<StockProvider>(context, listen: true);
     final ai = Provider.of<AISuggestionProvider>(context, listen: true);
-    final auth = Provider.of<AuthProvider>(context, listen: true);
-    final token = auth.token;
+    // final auth = Provider.of<AuthProvider>(context, listen: true);
+    //  final token = auth.token;
 
     Size size = MediaQuery.of(context).size;
     final double height = size.height;

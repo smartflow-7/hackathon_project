@@ -30,7 +30,7 @@ class _NewsState extends State<News> {
     var themecolor = Theme.of(context).colorScheme;
     // final portfolioValue = stockProvider.portfolioValue;
     Size size = MediaQuery.of(context).size;
-    double width = size.width;
+    // double width = size.width;
     double height = size.height;
     final contheight = size.height / 4.5;
     return SafeArea(

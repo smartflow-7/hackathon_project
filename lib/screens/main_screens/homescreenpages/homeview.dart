@@ -2,7 +2,7 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+//import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hackathon_project/Widgets/apptheme.dart';
 import 'package:hackathon_project/logic/Date_time_format.dart';
 import 'package:hackathon_project/logic/suffix.dart';
@@ -14,8 +14,7 @@ import 'package:hackathon_project/models/Providers/news_service.dart';
 import 'package:hackathon_project/models/Providers/stock_provider.dart';
 import 'package:hackathon_project/models/Providers/themeprovider.dart';
 import 'package:hackathon_project/models/nigerian_stocks.dart';
-import 'package:hackathon_project/screens/educationalcontent.dart';
-import 'package:hackathon_project/screens/main_screens/Tradescreens/ViewStock.dart';
+import 'package:hackathon_project/screens/main_screens/Learning_screens/educationalcontent.dart';
 import 'package:hackathon_project/screens/main_screens/homescreenpages/portfoliopage.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:provider/provider.dart';
@@ -37,8 +36,8 @@ class _HomeviewState extends State<Homeview> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       // Safely access providers after the widget is built
       //  final stockProvider =
-      final token = await const FlutterSecureStorage()
-          .read(key: 'auth_token'); // Replace with actual token
+      // final token = await const FlutterSecureStorage()
+      //     .read(key: 'auth_token'); // Replace with actual token
 
       Provider.of<NewsProvider>(context, listen: false).fetchAllNews();
       Provider.of<StockProvider>(context, listen: false).initialize();
@@ -50,7 +49,7 @@ class _HomeviewState extends State<Homeview> {
 
   @override
   Widget build(BuildContext context) {
-    final stockProvider = Provider.of<StockProvider>(context, listen: true);
+    // final stockProvider = Provider.of<StockProvider>(context, listen: true);
     final leaderProvider =
         Provider.of<LeaderboardProvider>(context, listen: true);
     var themecolor = Theme.of(context).colorScheme;
@@ -70,7 +69,7 @@ class _HomeviewState extends State<Homeview> {
     print('Leaderboard Page Width: $width, Height: $height');
 
     return Consumer<StockProvider>(builder: (context, provider, child) {
-      String change = provider.percentageChange;
+      //  String change = provider.percentageChange;
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24.0),
         child: ListView(

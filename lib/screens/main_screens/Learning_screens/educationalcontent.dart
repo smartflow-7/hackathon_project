@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hackathon_project/Widgets/apptheme.dart';
 import 'package:hackathon_project/Widgets/edutile.dart';
 import 'package:hackathon_project/Widgets/newstile.dart';
 import 'package:hackathon_project/models/Providers/api_service.dart';
@@ -8,7 +7,7 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:redacted/redacted.dart';
 
-import '../logic/Date_time_format.dart';
+import '../../../logic/Date_time_format.dart';
 
 class Educationalcontent extends StatelessWidget {
   const Educationalcontent({super.key});
@@ -119,7 +118,7 @@ class Educationalcontent extends StatelessWidget {
               Container(
                 height: 172,
                 decoration: BoxDecoration(
-                    color: Colors.yellowAccent,
+                    color: const Color(0xFFFFDD00),
                     borderRadius: BorderRadius.circular(12)),
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
@@ -198,7 +197,7 @@ class Educationalcontent extends StatelessWidget {
                       padding: const EdgeInsets.only(right: 10.0),
                       child: Edutile(
                         title: courses[index].title ?? '',
-                        Description: courses[index].description ?? '',
+                        description: courses[index].description ?? '',
                         inageurl: courses[index].imageurl,
                       ),
                     );

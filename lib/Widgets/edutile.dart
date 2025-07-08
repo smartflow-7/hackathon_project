@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:redacted/redacted.dart';
 
 class Edutile extends StatelessWidget {
-  Edutile(
+  const Edutile(
       {super.key,
-      required this.Description,
+      required this.description,
       required this.title,
       required this.inageurl});
-  String title;
-  String Description;
-  String? inageurl;
+  final String title;
+  final String description;
+  final String? inageurl;
 
   @override
   Widget build(BuildContext context) {
@@ -60,11 +60,88 @@ class Edutile extends StatelessWidget {
           const SizedBox(height: 8),
           Expanded(
             child: Text(
-              Description,
+              description,
               style: TextStyle(
                 fontWeight: FontWeight.w600,
                 fontFamily: 'Gilroy',
                 fontSize: 16,
+                color: themecolor.onPrimary,
+              ),
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class LargeEdutile extends StatelessWidget {
+  final String description;
+  final String title;
+  final String? inageurl;
+
+  const LargeEdutile({
+    super.key,
+    required this.description,
+    required this.title,
+    required this.inageurl,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    var themecolor = Theme.of(context).colorScheme;
+    return Container(
+      width: double.infinity,
+      //height: 251,
+      color: const Color.fromARGB(16, 193, 193, 193),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ClipRRect(
+            // width: double.infinity,
+            // height: 160,
+            // decoration: BoxDecoration(
+            //   color: const Color.fromARGB(255, 26, 25, 25),
+            //   borderRadius: BorderRadius.circular(11),
+            // ),
+            borderRadius: BorderRadius.circular(11),
+            child: CachedNetworkImage(
+              width: double.infinity,
+              height: 160,
+              imageUrl: inageurl ?? '',
+              fit: BoxFit.cover,
+              placeholder: (context, url) => Container(
+                width: double.infinity,
+                height: 160,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(11),
+                ),
+              ).redacted(context: context, redact: true),
+              errorWidget: (context, url, error) => Container(
+                color: Colors.grey[300],
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            title,
+            style: const TextStyle(
+              fontFamily: 'Gilroy',
+              fontSize: 16,
+              color: Colors.grey,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Expanded(
+            child: Text(
+              description,
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Gilroy',
+                fontSize: 20,
                 color: themecolor.onPrimary,
               ),
               maxLines: 3,

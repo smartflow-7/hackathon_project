@@ -1,28 +1,26 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore: file_names
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hackathon_project/Widgets/apptheme.dart';
 import 'package:hackathon_project/Widgets/simplestocktile.dart';
-import 'package:hackathon_project/models/Providers/api_service.dart';
 import 'package:hackathon_project/models/Providers/stock_provider.dart';
 import 'package:hackathon_project/screens/main_screens/Tradescreens/sucessfull.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
-import 'package:overlay_kit/overlay_kit.dart';
 import 'package:provider/provider.dart';
 
 class Transactionpage extends StatefulWidget {
-  Transactionpage(
+  const Transactionpage(
       {super.key,
       required this.name,
       required this.price,
       required this.symbol,
       required this.isbuy});
-  String symbol;
-  String name;
-  double price;
-  bool isbuy;
+  final String symbol;
+  final String name;
+  final double price;
+  final bool isbuy;
 
   @override
   State<Transactionpage> createState() => _TransactionpageState();
@@ -52,7 +50,7 @@ class _TransactionpageState extends State<Transactionpage> {
     } else {
       setState(() {
         result = 0.0;
-        print(result);
+        //  print(result);
       });
     }
   }
@@ -64,7 +62,7 @@ class _TransactionpageState extends State<Transactionpage> {
     final double boxheight = height / 8.5;
     var themecolor = Theme.of(context).colorScheme;
     final value = Provider.of<StockProvider>(context);
-    final Auth = Provider.of<AuthProvider>(context);
+    // final Auth = Provider.of<AuthProvider>(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Consumer<StockProvider>(builder: (context, my, child) {

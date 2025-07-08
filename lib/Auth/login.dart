@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:hackathon_project/models/Providers/api_service.dart';
 import 'package:hackathon_project/Auth/forgottenpassword/forgot_password.dart';
 import 'package:hackathon_project/Widgets/apptheme.dart';
-import 'package:hackathon_project/logic/is_opening_app.dart';
-import 'package:hackathon_project/models/Providers/themeprovider.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -47,7 +45,7 @@ class _LoginState extends State<Login> {
     double width = size.width;
     final authProvider = Provider.of<AuthProvider>(context);
     // final user = authProvider.user;
-    final themeProvider = Provider.of<ThemeProvider>(context);
+    // final themeProvider = Provider.of<ThemeProvider>(context);
     var themecolor = Theme.of(context).colorScheme;
     return Scaffold(
         backgroundColor: themecolor.surface,

@@ -128,7 +128,7 @@ class LeaderboardProvider extends ChangeNotifier {
   /// Refresh leaderboard data (background refresh)
   Future<void> _refreshLeaderboardSilently() async {
     // Don't show loading state for background refresh
-    final previousState = _state;
+    // final previousState = _state;
 
     try {
       final response = await _apiService.getLeaderboard();

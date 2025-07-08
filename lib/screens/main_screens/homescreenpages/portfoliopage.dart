@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hackathon_project/Widgets/apptheme.dart';
 import 'package:hackathon_project/Widgets/simplestocktile.dart';
 import 'package:hackathon_project/models/Providers/api_service.dart';
 import 'package:hackathon_project/models/Providers/stock_provider.dart';
@@ -345,8 +344,8 @@ class Portfoliopage extends StatelessWidget {
                         child: Ink(
                           child: Simplestocktile(
                             currentprice: stock.buyPrice.toStringAsFixed(3),
-                            name: stock.symbol ?? 'Unknown',
-                            symbol: stock.symbol ?? 'N/A',
+                            name: stock.symbol,
+                            symbol: stock.symbol,
                             units: stock.quantity,
                           ),
                         ),
